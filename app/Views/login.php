@@ -57,9 +57,9 @@
                 <img src="<?= base_url('logo.png'); ?>" alt="Logo" class="mb-3">
                 <h1 class="h3 mb-3 font-weight-normal">Login</h1>
                 <div id="alert-container"></div>
-                <?php if (session()->getFlashdata('warning')) : ?>
-                    <div class="alert alert-succees">
-                        <?= session()->getFlashdata('warning') ?>
+                <?php if (isset($message)) : ?>
+                    <div class="alert alert-success">
+                        <?= $message ?>
                     </div>
                 <?php endif; ?>
                 <p class="text-muted">Please fill out the following fields to login:</p>

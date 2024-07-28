@@ -54,6 +54,11 @@ class Users extends Migration
                 'default' => '10',
                 'comment' => '9: Inaktif, 10: Aktif',
             ],
+            'img_user' => [
+                'type' => 'VARCHAR',
+                'constraint' => '255',
+                'null' => true
+            ],
             'created_at' => [
                 'type' => 'DATETIME',
                 'null' => true,

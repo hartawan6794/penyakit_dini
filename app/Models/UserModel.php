@@ -10,13 +10,13 @@ class UserModel extends Model {
 	protected $primaryKey = 'id_user';
 	protected $returnType = 'object';
 	protected $useSoftDeletes = false;
-	protected $allowedFields = ['username', 'password', 'nama', 'email', 'no_telp', 'alamat', 'level', 'status', 'created_at', 'updated_at'];
+	protected $allowedFields = ['username', 'password', 'nama', 'email', 'no_telp', 'alamat', 'level', 'status', 'img_user','created_at', 'updated_at'];
 	protected $useTimestamps = false;
 	protected $createdField  = 'created_at';
 	protected $updatedField  = 'updated_at';
 	protected $deletedField  = 'deleted_at';
 	protected $validationRules    = [];
 	protected $validationMessages = [];
-	protected $skipValidation     = true;    
-	
+	protected $skipValidation     = true;
+
 }
