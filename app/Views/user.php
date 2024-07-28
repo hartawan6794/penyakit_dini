@@ -3,30 +3,37 @@
 <?= $this->section("content") ?>
 
 <style>
-.status {
+  .status {
     padding: 5px 20px;
     border-radius: 10px;
     color: white;
     font-weight: bold;
     font-size: 12px;
-}
+  }
 
-.status.active {
+  .status.active {
     background-color: green;
-}
+  }
 
-.status.inactive {
+  .status.inactive {
     background-color: red;
-}
+  }
 
-.level {
+  .level {
     padding: 5px 20px;
     border-radius: 10px;
     color: white;
     font-weight: bold;
     font-size: 12px;
+    display: inline-block;
+    /* Menjadikan elemen inline-block */
+    line-height: 1.5;
+    /* Menyesuaikan tinggi baris untuk menghindari pemotongan */
+    overflow: hidden;
+    /* Menghindari konten yang meluap */
     background-color: green;
-}
+    text-align: center;
+  }
 </style>
 
 <!-- Main content -->
@@ -55,7 +62,7 @@
           <th>Level</th>
           <th>Status</th>
           <th>Dibuat</th>
-          <th>Diubah</th>
+          <!-- <th>Diubah</th> -->
 
           <th></th>
         </tr>
@@ -87,12 +94,12 @@
                 <input type="text" id="username" name="username" class="form-control" placeholder="Username" minlength="0" maxlength="255" required>
               </div>
             </div>
-            <div class="col-md-12">
+            <!-- <div class="col-md-12">
               <div class="form-group mb-3">
                 <label for="password" class="col-form-label"> Password: <span class="text-danger">*</span> </label>
                 <input type="password" id="password" name="password" class="form-control" placeholder="Password" minlength="0" maxlength="255" required>
               </div>
-            </div>
+            </div> -->
             <div class="col-md-12">
               <div class="form-group mb-3">
                 <label for="nama" class="col-form-label"> Nama: </label>
@@ -121,9 +128,16 @@
               <div class="form-group mb-3">
                 <label for="level" class="col-form-label"> Level: </label>
                 <select name="level" class="form-control" id="level">
-                  <option value="1">Admin</option>
-                  <option value="2">Petugas</option>
+                  <!-- <option value="1">Admin</option> -->
+                  <option value="2">Kepala Puskes</option>
+                  <option value="3">Petugas</option>
                 </select>
+              </div>
+            </div>
+            <div class="col-md-12 uploaded">
+              <div class="form-group mb-3">
+                <label for="img_user" class="col-form-label"> Photo Profile: </label>
+                <input type="file" id="img_user" name="img_user" class="form-control" minlength="0" maxlength="255">
               </div>
             </div>
           </div>
@@ -169,6 +183,10 @@
         async: "true"
       }
     });
+    $('#data-modal').modal({
+      backdrop: 'static',
+      keyboard: false
+    });
   });
 
   var urlController = '';
@@ -185,6 +203,8 @@
   function save(id_user) {
     // reset the form 
     $("#data-form")[0].reset();
+    $('.uploaded').show();
+
     $(".form-control").removeClass('is-invalid').removeClass('is-valid');
     if (typeof id_user === 'undefined' || id_user < 1) { //add
       urlController = '<?= base_url($controller . "/add") ?>';
@@ -208,6 +228,8 @@
           $("#info-header-modalLabel").text('<?= lang("Ubah") ?>');
           $("#form-btn").text(submitText);
           $('#data-modal').modal('show');
+
+          $('.uploaded').hide();
           //insert data to form
           $("#data-form #id_user").val(response.id_user);
           $("#data-form #username").val(response.username);
@@ -248,14 +270,16 @@
         }
       },
       submitHandler: function(form) {
-        var form = $('#data-form');
-        $(".text-danger").remove();
+        // var form = $('#data-form');
+        // $(".text-danger").remove();
         $.ajax({
           // fixBug get url from global function only
           // get global variable is bug!
           url: getUrl(),
           type: 'post',
-          data: form.serialize(),
+          data: new FormData(form),
+          processData: false,
+          contentType: false,
           cache: false,
           dataType: 'json',
           beforeSend: function() {
@@ -330,6 +354,59 @@
           type: 'post',
           data: {
             id_user: id_user
+          },
+          dataType: 'json',
+          success: function(response) {
+
+            if (response.success === true) {
+              Swal.fire({
+                toast: true,
+                position: 'top-end',
+                icon: 'success',
+                title: response.messages,
+                showConfirmButton: false,
+                timer: 1500
+              }).then(function() {
+                $('#data_table').DataTable().ajax.reload(null, false).draw(false);
+              })
+            } else {
+              Swal.fire({
+                toast: false,
+                position: 'bottom-end',
+                icon: 'error',
+                title: response.messages,
+                showConfirmButton: false,
+                timer: 3000
+              })
+            }
+          }
+        });
+      }
+    })
+  }
+
+  function active(id_user, type) {
+
+    let message = type === 9 ? "<?= lang("Inactive user ini ?") ?>" : "<?= lang("Active user ini ?") ?>";
+
+    Swal.fire({
+      title: "<?= lang("Status") ?>",
+      text: message,
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: '<?= lang("Konfirmasi") ?>',
+      cancelButtonText: '<?= lang("Batal") ?>'
+    }).then((result) => {
+
+      if (result.value) {
+        $.ajax({
+          url: '<?php echo base_url($controller . "/active") ?>',
+          type: 'post',
+          data: {
+            id_user: id_user,
+            type: type
           },
           dataType: 'json',
           success: function(response) {

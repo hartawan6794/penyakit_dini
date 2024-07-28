@@ -35,14 +35,24 @@ class Auth extends Controller
                 $user = $model->where('username', $username)->first();
 
                 if ($user && password_verify($password, $user->password)) {
-                    // Simpan session user
-                    session()->set([
-                        'user_id' => $user->id_user,
-                        'username' => $user->username,
-                        'nama' => $user->nama,
-                        'logged_in' => true
-                    ]);
-                    $response['status'] = 'success';
+
+                    if ($user->status == 9) {
+
+                        $response['status'] = 'error';
+                        $response['messages'] = 'User anda tidak aktif';
+                    } else {
+
+                        // Simpan session user
+                        session()->set([
+                            'user_id' => $user->id_user,
+                            'username' => $user->username,
+                            'nama' => $user->nama,
+                            'level' => $user->level,
+                            'img_user' => $user->img_user,
+                            'logged_in' => true
+                        ]);
+                        $response['status'] = 'success';
+                    }
                 } else {
                     $response['status'] = 'error';
                     $response['messages'] = 'Username atau Password salah';
@@ -56,9 +66,9 @@ class Auth extends Controller
     public function logout()
     {
         $session = session();
-        session()->setFlashdata('warning', 'Anda Berhasil Logout.');
+        $data['message'] = 'Anda berhasil logout';
         $session->destroy();
         // Redirect ke halaman awal
-        return redirect()->to(base_url('auth'));
+        return view('login', $data);
     }
 }
