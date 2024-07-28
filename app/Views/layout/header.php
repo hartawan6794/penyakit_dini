@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <link rel="icon" href="<?= base_url('') ?>">
+  <link rel="icon" href="<?= base_url('asset\img\logo_puskes.png') ?>">
   <title>Penyakit Usia Dini</title>
   <meta name="description" content="Puskesmas">
   <meta name="keyword" content="garment,factory,khonkaen,ocomshop">

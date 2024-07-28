@@ -4,19 +4,19 @@
 namespace App\Models;
 use CodeIgniter\Model;
 
-class UserModel extends Model {
+class RolesModel extends Model {
     
-	protected $table = 'tbl_user';
-	protected $primaryKey = 'id_user';
+	protected $table = 'roles';
+	protected $primaryKey = 'id';
 	protected $returnType = 'object';
 	protected $useSoftDeletes = false;
-	protected $allowedFields = ['username', 'password', 'nama', 'email', 'no_telp', 'alamat', 'id_role', 'status', 'img_user','created_at', 'updated_at'];
+	protected $allowedFields = ['name', 'description'];
 	protected $useTimestamps = false;
 	protected $createdField  = 'created_at';
 	protected $updatedField  = 'updated_at';
 	protected $deletedField  = 'deleted_at';
 	protected $validationRules    = [];
 	protected $validationMessages = [];
-	protected $skipValidation     = true;
-
+	protected $skipValidation     = true;    
+	
 }

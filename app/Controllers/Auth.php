@@ -47,7 +47,7 @@ class Auth extends Controller
                             'user_id' => $user->id_user,
                             'username' => $user->username,
                             'nama' => $user->nama,
-                            'level' => $user->level,
+                            'id_role' => $user->id_role,
                             'img_user' => $user->img_user,
                             'logged_in' => true
                         ]);

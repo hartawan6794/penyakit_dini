@@ -2,46 +2,12 @@
 
 <?= $this->section("content") ?>
 
-<style>
-  .status {
-    padding: 5px 20px;
-    border-radius: 10px;
-    color: white;
-    font-weight: bold;
-    font-size: 12px;
-  }
-
-  .status.active {
-    background-color: green;
-  }
-
-  .status.inactive {
-    background-color: red;
-  }
-
-  .id_role {
-    padding: 5px 20px;
-    border-radius: 10px;
-    color: white;
-    font-weight: bold;
-    font-size: 12px;
-    display: inline-block;
-    /* Menjadikan elemen inline-block */
-    line-height: 1.5;
-    /* Menyesuaikan tinggi baris untuk menghindari pemotongan */
-    overflow: hidden;
-    /* Menghindari konten yang meluap */
-    background-color: green;
-    text-align: center;
-  }
-</style>
-
 <!-- Main content -->
 <div class="card">
   <div class="card-header">
     <div class="row">
       <div class="col-9 mt-2">
-        <h3 class="card-title">Tabel User</h3>
+        <h3 class="card-title">roles</h3>
       </div>
       <div class="col-3">
         <button type="button" class="btn float-end btn-success" onclick="save()" title="<?= lang("Tambah") ?>"> <i class="fa fa-plus"></i> <?= lang('Tambah') ?></button>
@@ -54,15 +20,8 @@
       <thead>
         <tr>
           <th>No</th>
-          <th>Username</th>
-          <th>Nama</th>
-          <th>Email</th>
-          <th>No telp</th>
-          <th>Alamat</th>
-          <th>id_role</th>
-          <th>Status</th>
-          <th>Dibuat</th>
-          <!-- <th>Diubah</th> -->
+          <th>Name</th>
+          <th>Description</th>
 
           <th></th>
         </tr>
@@ -85,63 +44,23 @@
       <div class="modal-body">
         <form id="data-form" class="pl-3 pr-3">
           <div class="row">
-            <input type="hidden" id="id_user" name="id_user" class="form-control" placeholder="Id user" required>
+            <input type="hidden" id="id" name="id" class="form-control" placeholder="Id" required>
           </div>
           <div class="row">
             <div class="col-md-12">
               <div class="form-group mb-3">
-                <label for="username" class="col-form-label"> Username: <span class="text-danger">*</span> </label>
-                <input type="text" id="username" name="username" class="form-control" placeholder="Username" minlength="0" maxlength="255" required>
-              </div>
-            </div>
-            <!-- <div class="col-md-12">
-              <div class="form-group mb-3">
-                <label for="password" class="col-form-label"> Password: <span class="text-danger">*</span> </label>
-                <input type="password" id="password" name="password" class="form-control" placeholder="Password" minlength="0" maxlength="255" required>
-              </div>
-            </div> -->
-            <div class="col-md-12">
-              <div class="form-group mb-3">
-                <label for="nama" class="col-form-label"> Nama: </label>
-                <input type="text" id="nama" name="nama" class="form-control" placeholder="Nama" minlength="0" maxlength="255">
+                <label for="name" class="col-form-label"> Name: <span class="text-danger">*</span> </label>
+                <input type="text" id="name" name="name" class="form-control" placeholder="Name" minlength="0" maxlength="255" required>
               </div>
             </div>
             <div class="col-md-12">
               <div class="form-group mb-3">
-                <label for="email" class="col-form-label"> Email: </label>
-                <input type="email" id="email" name="email" class="form-control" placeholder="Email" minlength="0" maxlength="255">
-              </div>
-            </div>
-            <div class="col-md-12">
-              <div class="form-group mb-3">
-                <label for="no_telp" class="col-form-label"> No telp: </label>
-                <input type="text" id="no_telp" name="no_telp" class="form-control" placeholder="No telp" minlength="0" maxlength="255">
-              </div>
-            </div>
-            <div class="col-md-12">
-              <div class="form-group mb-3">
-                <label for="alamat" class="col-form-label"> Alamat: </label>
-                <input type="text" id="alamat" name="alamat" class="form-control" placeholder="Alamat" minlength="0" maxlength="255">
-              </div>
-            </div>
-            <div class="col-md-12">
-              <div class="form-group mb-3">
-                <label for="id_role" class="col-form-label"> Peran : </label>
-                <select name="id_role" class="form-control" id="id_role">
-                  <!-- <option value="1">Admin</option> -->
-                  <?php foreach ($roles as $value) : ?>
-                    <option value="<?= $value->id ?>"><?= $value->name ?></option>
-                  <?php endforeach; ?>
-                </select>
-              </div>
-            </div>
-            <div class="col-md-12 uploaded">
-              <div class="form-group mb-3">
-                <label for="img_user" class="col-form-label"> Photo Profile: </label>
-                <input type="file" id="img_user" name="img_user" class="form-control" minlength="0" maxlength="255">
+                <label for="description" class="col-form-label"> Description: </label>
+                <textarea cols="40" rows="5" id="description" name="description" class="form-control" placeholder="Description" minlength="0"></textarea>
               </div>
             </div>
           </div>
+
           <div class="form-group text-center">
             <div class="btn-group">
               <button type="submit" class="btn btn-success mr-2" id="form-btn"><?= lang("Simpan") ?></button>
@@ -184,10 +103,6 @@
         async: "true"
       }
     });
-    $('#data-modal').modal({
-      backdrop: 'static',
-      keyboard: false
-    });
   });
 
   var urlController = '';
@@ -201,13 +116,11 @@
     return submitText;
   }
 
-  function save(id_user) {
+  function save(id) {
     // reset the form 
     $("#data-form")[0].reset();
-    $('.uploaded').show();
-
     $(".form-control").removeClass('is-invalid').removeClass('is-valid');
-    if (typeof id_user === 'undefined' || id_user < 1) { //add
+    if (typeof id === 'undefined' || id < 1) { //add
       urlController = '<?= base_url($controller . "/add") ?>';
       submitText = '<?= lang("Simpan") ?>';
       $('#model-header').removeClass('bg-info').addClass('bg-success');
@@ -221,7 +134,7 @@
         url: '<?php echo base_url($controller . "/getOne") ?>',
         type: 'post',
         data: {
-          id_user: id_user
+          id: id
         },
         dataType: 'json',
         success: function(response) {
@@ -229,20 +142,10 @@
           $("#info-header-modalLabel").text('<?= lang("Ubah") ?>');
           $("#form-btn").text(submitText);
           $('#data-modal').modal('show');
-
-          $('.uploaded').hide();
           //insert data to form
-          $("#data-form #id_user").val(response.id_user);
-          $("#data-form #username").val(response.username);
-          $("#data-form #password").val(response.password);
-          $("#data-form #nama").val(response.nama);
-          $("#data-form #email").val(response.email);
-          $("#data-form #no_telp").val(response.no_telp);
-          $("#data-form #alamat").val(response.alamat);
-          $("#data-form #id_role").val(response.id_role);
-          $("#data-form #status").val(response.status);
-          $("#data-form #created_at").val(response.created_at);
-          $("#data-form #updated_at").val(response.updated_at);
+          $("#data-form #id").val(response.id);
+          $("#data-form #name").val(response.name);
+          $("#data-form #description").val(response.description);
 
         }
       });
@@ -271,16 +174,14 @@
         }
       },
       submitHandler: function(form) {
-        // var form = $('#data-form');
-        // $(".text-danger").remove();
+        var form = $('#data-form');
+        $(".text-danger").remove();
         $.ajax({
           // fixBug get url from global function only
           // get global variable is bug!
           url: getUrl(),
           type: 'post',
-          data: new FormData(form),
-          processData: false,
-          contentType: false,
+          data: form.serialize(),
           cache: false,
           dataType: 'json',
           beforeSend: function() {
@@ -337,7 +238,7 @@
 
 
 
-  function remove(id_user) {
+  function remove(id) {
     Swal.fire({
       title: "<?= lang("Hapus") ?>",
       text: "<?= lang("Yakin ingin menghapus ?") ?>",
@@ -354,60 +255,7 @@
           url: '<?php echo base_url($controller . "/remove") ?>',
           type: 'post',
           data: {
-            id_user: id_user
-          },
-          dataType: 'json',
-          success: function(response) {
-
-            if (response.success === true) {
-              Swal.fire({
-                toast: true,
-                position: 'top-end',
-                icon: 'success',
-                title: response.messages,
-                showConfirmButton: false,
-                timer: 1500
-              }).then(function() {
-                $('#data_table').DataTable().ajax.reload(null, false).draw(false);
-              })
-            } else {
-              Swal.fire({
-                toast: false,
-                position: 'bottom-end',
-                icon: 'error',
-                title: response.messages,
-                showConfirmButton: false,
-                timer: 3000
-              })
-            }
-          }
-        });
-      }
-    })
-  }
-
-  function active(id_user, type) {
-
-    let message = type === 9 ? "<?= lang("Inactive user ini ?") ?>" : "<?= lang("Active user ini ?") ?>";
-
-    Swal.fire({
-      title: "<?= lang("Status") ?>",
-      text: message,
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonColor: '#3085d6',
-      cancelButtonColor: '#d33',
-      confirmButtonText: '<?= lang("Konfirmasi") ?>',
-      cancelButtonText: '<?= lang("Batal") ?>'
-    }).then((result) => {
-
-      if (result.value) {
-        $.ajax({
-          url: '<?php echo base_url($controller . "/active") ?>',
-          type: 'post',
-          data: {
-            id_user: id_user,
-            type: type
+            id: id
           },
           dataType: 'json',
           success: function(response) {

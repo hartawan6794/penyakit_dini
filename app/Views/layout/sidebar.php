@@ -24,6 +24,15 @@
                 </a>
               </li>
 
+              <li class="nav-header ">Master</li>
+              <li class="nav-item">
+                <a href="<?= base_url('roles') ?>" class="nav-link <?= $seg == 'roles' ? 'active' : '' ?>">
+                  <i class="nav-icon far fa-circle"></i>
+                  <p>Role</p>
+                </a>
+              </li>
+              </li>
+
               <li class="nav-header ">PENGGUNA</li>
               <li class="nav-item <?= $seg == 'user' || $seg == 'pasien' ? 'menu-open menu-is-open' : '' ?>">
                 <a href="#" class="nav-link ">
@@ -37,13 +46,13 @@
                   <li class="nav-item">
                     <a href="<?= base_url('user') ?>" class="nav-link <?= $seg == 'user' ? 'active' : '' ?>">
                       <i class="nav-icon far fa-circle"></i>
-                      <p>Petugas</p>
+                      <p>Pengguna</p>
                     </a>
                   </li>
                   <li class="nav-item">
                     <a href="<?= base_url('pasien') ?>" class="nav-link <?= $seg == 'pasien' ? 'active' : '' ?>">
                       <i class="nav-icon far fa-circle"></i>
-                      <p>Biodat Pasien</p>
+                      <p>Pasien</p>
                     </a>
                   </li>
                 </ul>
