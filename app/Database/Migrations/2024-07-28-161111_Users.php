@@ -43,10 +43,9 @@ class Users extends Migration
                 'constraint' => '255',
                 'null' => true
             ],
-            'level' => [
+            'id_role' => [
                 'type' => 'INT',
-                'constraint' => 11,
-                'null' => true
+                'constraint' => 11
             ],
             'status' => [
                 'type' => 'ENUM',
@@ -69,6 +68,7 @@ class Users extends Migration
             ],
         ]);
         $this->forge->addKey('id_user', TRUE);
+        $this->forge->addForeignKey('id_role', 'roles', 'id', 'CASCADE', '');
         $this->forge->createTable('tbl_user');
     }
 

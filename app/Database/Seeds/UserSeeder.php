@@ -15,7 +15,7 @@ class UserSeeder extends Seeder
             'email' => 'admin@example.com',
             'no_telp' => '1234567890',
             'alamat' => 'Jl. Contoh No. 1',
-            'level' => 1,
+            'id_role' => 1,
             'status' => '10' // 10: Aktif
         ];
 
