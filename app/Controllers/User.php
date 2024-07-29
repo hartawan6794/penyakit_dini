@@ -163,7 +163,7 @@ class User extends BaseController
 			],
 			'img_user' => [
 				'label' => 'Img User',
-				'rules' => 'uploaded[img_user]|is_image[img_user]|mime_in[img_user,image/jpg,image/jpeg,image/png]|max_size[img_user,2048]',
+				'rules' => 'is_image[img_user]|mime_in[img_user,image/jpg,image/jpeg,image/png]|max_size[img_user,2048]',
 				'errors' => [
 					'max_size' => 'Ukuran file harus maksimal 2Mb',
 					'mime_in' => 'Harap masukkan file berupa gambar (jpg, jpeg, png)',
