@@ -2,12 +2,12 @@
 <html>
 
 <head>
-    <link rel="icon" href="<?= base_url('asset\img\logo_puskes.png') ?>">
+    <link rel="icon" href="<?= base_url('asset/img/logo_puskes.png') ?>">
     <title>Login</title>
     <link rel="stylesheet" href="<?= base_url('asset/css/adminlte.min.css') ?>">
     <style>
         body {
-            background: url('<?= base_url('asset\img\bg.jpg'); ?>') no-repeat center center fixed;
+            background: url('<?= base_url('asset/img/bg.jpg'); ?>') no-repeat center center fixed;
             background-size: cover;
             height: 100%;
             margin: 0;
@@ -55,7 +55,7 @@
     <div class="site-login">
         <div class="card shadow-sm p-4">
             <div class="text-center mb-4">
-                <img src="<?= base_url('asset\img\logo_puskes.png'); ?>" alt="Logo" class="mb-3">
+                <img src="<?= base_url('asset/img/logo_puskes.png'); ?>" alt="Logo" class="mb-3">
                 <h1 class="h6 mb-3 font-weight-normal">SISTEM INFORMASI TENTANG PENYAKIT PADA ANAK USIA DINI DI PUSKESMAS GEDUNG KARYA JITU</h1>
                 <div id="alert-container"></div>
                 <?php if (isset($message)) : ?>

@@ -23,8 +23,49 @@
                   </p>
                 </a>
               </li>
+              <li class="nav-item">
+                <a href="<?= base_url('pendaftaran') ?>" class="nav-link <?= $seg == 'pendaftaran' || $seg == '' ? 'active' : '' ?> ">
+                  <i class="nav-icon fa fa-desktop"></i>
+                  <p>
+                    Pendaftaran
+                  </p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="<?= base_url('penyakit') ?>" class="nav-link <?= $seg == 'penyakit' || $seg == '' ? 'active' : '' ?> ">
+                  <i class="nav-icon fa fa-desktop"></i>
+                  <p>
+                    Penyakit
+                  </p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="<?= base_url('keluhan') ?>" class="nav-link <?= $seg == 'keluhan' || $seg == '' ? 'active' : '' ?> ">
+                  <i class="nav-icon fa fa-desktop"></i>
+                  <p>
+                    Keluhan
+                  </p>
+                </a>
+              </li>
+
+              <li class="nav-item">
+                <a href="<?= base_url('diagnosis') ?>" class="nav-link <?= $seg == 'diagnosis' || $seg == '' ? 'active' : '' ?> ">
+                  <i class="nav-icon fa fa-desktop"></i>
+                  <p>
+                    Diagnosis
+                  </p>
+                </a>
+              </li>
 
               <li class="nav-header ">Master</li>
+              <li class="nav-item">
+                <a href="<?= base_url('obat') ?>" class="nav-link <?= $seg == 'obat' || $seg == '' ? 'active' : '' ?> ">
+                  <i class="nav-icon fa fa-desktop"></i>
+                  <p>
+                    Obat
+                  </p>
+                </a>
+              </li>
               <li class="nav-item">
                 <a href="<?= base_url('roles') ?>" class="nav-link <?= $seg == 'roles' ? 'active' : '' ?>">
                   <i class="nav-icon far fa-circle"></i>
