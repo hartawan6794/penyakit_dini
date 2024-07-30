@@ -1,15 +1,24 @@
 <?= $this->extend("layout/master") ?>
 <?= $this->section("content") ?>
+<style>
+  .card{
+    border-radius: 15px !important;
+  }
 
+  .card-header{
+    background-color:#198754 !important;
+    color: white !important;
+  }
+</style>
 <div class="row">
   <div class="col-md-12">
-    <div class="card card-widget bg-primary p-1">
+    <div class="card card-widget bg-success p-1">
       <div class="card-body">
         <h4>
-          <span color="white" class="h2">Form Pendaftaran Pasien</span>
+          <span color="white" class="h3">Form Pendaftaran Pasien</span>
         </h4>
         <p>
-          <span color="white" class="h4">Pilih atau masukan nama pasien untuk input pasien baru, sebelum input pasien baru pastikan untuk cek pasien terdaftar terlebih dahulu dengan mengklik tombol <i>search</i>/pencarian</span>
+          <span color="white" class="h6">Pilih atau masukan nama pasien untuk input pasien baru, sebelum input pasien baru pastikan untuk cek pasien terdaftar terlebih dahulu dengan mengklik tombol <i>search</i>/pencarian</span>
         </p>
       </div>
     </div>
@@ -114,9 +123,10 @@
             </div>
           </div>
           <div class="form-group text-center">
-            <div class="btn-group">
+            <div class="">
               <button type="button" class="btn btn-success mr-2" id="form-btn"><?= lang("Simpan") ?></button>
-              <button type="button" class="btn btn-danger"><?= lang("Batal") ?></button>
+              <a href="/pendaftaran" class="btn btn-danger"><?= lang("Batal") ?></a>
+              <!-- <button type="button" class="btn btn-danger"><?= lang("Batal") ?></button> -->
             </div>
           </div>
         </form>

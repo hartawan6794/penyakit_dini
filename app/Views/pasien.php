@@ -88,6 +88,12 @@
             </div>
             <div class="col-md-12">
               <div class="form-group mb-3">
+                <label for="umur" class="col-form-label"> Umur: <span class="text-danger">*</span> </label>
+                <input type="text" id="umur" name="umur" class="form-control" placeholder="No telepon" minlength="0" maxlength="15" required>
+              </div>
+            </div>
+            <div class="col-md-12">
+              <div class="form-group mb-3">
                 <label for="no_telepon" class="col-form-label"> No telepon: <span class="text-danger">*</span> </label>
                 <input type="text" id="no_telepon" name="no_telepon" class="form-control" placeholder="No telepon" minlength="0" maxlength="15" required>
               </div>

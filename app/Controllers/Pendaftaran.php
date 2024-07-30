@@ -182,6 +182,7 @@ class Pendaftaran extends BaseController
 					'jenis_kelamin' => $fields['jenis_kelamin'],
 					'alamat' => $fields['alamat'],
 					'nama_orang_tua' => $fields['nama_orang_tua'],
+					'umur'=> $fields['umur'],
 					'no_telepon' => $fields['no_telepon'],
 					'created_at' => date('Y-m-d H:i:s')
 				];

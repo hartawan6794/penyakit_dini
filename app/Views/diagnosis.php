@@ -73,12 +73,6 @@
                 <textarea cols="40" rows="5" id="catatan" name="catatan" class="form-control" placeholder="Catatan" minlength="0" required></textarea>
               </div>
             </div>
-            <div class="col-md-12">
-              <div class="form-group mb-3">
-                <label for="id_user" class="col-form-label"> Id user: <span class="text-danger">*</span> </label>
-                <input type="number" id="id_user" name="id_user" class="form-control" placeholder="Id user" minlength="0" required>
-              </div>
-            </div>
           </div>
 
           <div class="form-group text-center">

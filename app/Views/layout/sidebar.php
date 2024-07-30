@@ -15,8 +15,9 @@
           <nav class="mt-2">
             <!-- Sidebar Menu -->
             <ul class="nav nav-pills nav-sidebar flex-column" data-lte-toggle="treeview" role="menu" data-accordion="false">
+            <li class="nav-header ">Menu Aplikasi</li>
               <li class="nav-item">
-                <a href="<?= base_url('home') ?>" class="nav-link <?= $seg == 'home' || $seg == '' ? 'active' : '' ?> ">
+                <a href="<?= base_url('home') ?>" class="nav-link <?= $seg == 'home'  || $seg == ''  ? 'active' : '' ?> ">
                   <i class="nav-icon fa fa-desktop"></i>
                   <p>
                     Dashboard
@@ -24,24 +25,24 @@
                 </a>
               </li>
               <li class="nav-item">
-                <a href="<?= base_url('pendaftaran') ?>" class="nav-link <?= $seg == 'pendaftaran' || $seg == '' ? 'active' : '' ?> ">
-                  <i class="nav-icon fa fa-desktop"></i>
+                <a href="<?= base_url('pendaftaran') ?>" class="nav-link <?= $seg == 'pendaftaran' ? 'active' : '' ?> ">
+                  <i class="fa-solid fa-hospital-user"></i>
                   <p>
                     Pendaftaran
                   </p>
                 </a>
               </li>
               <li class="nav-item">
-                <a href="<?= base_url('penyakit') ?>" class="nav-link <?= $seg == 'penyakit' || $seg == '' ? 'active' : '' ?> ">
-                  <i class="nav-icon fa fa-desktop"></i>
+                <a href="<?= base_url('penyakit') ?>" class="nav-link <?= $seg == 'penyakit' ? 'active' : '' ?> ">
+                  <i class="fa-solid fa-square-virus"></i>
                   <p>
                     Penyakit
                   </p>
                 </a>
               </li>
               <li class="nav-item">
-                <a href="<?= base_url('keluhan') ?>" class="nav-link <?= $seg == 'keluhan' || $seg == '' ? 'active' : '' ?> ">
-                  <i class="nav-icon fa fa-desktop"></i>
+                <a href="<?= base_url('keluhan') ?>" class="nav-link <?= $seg == 'keluhan' ? 'active' : '' ?> ">
+                  <i class="fa-solid fa-heart-pulse"></i>
                   <p>
                     Keluhan
                   </p>
@@ -49,8 +50,8 @@
               </li>
 
               <li class="nav-item">
-                <a href="<?= base_url('diagnosis') ?>" class="nav-link <?= $seg == 'diagnosis' || $seg == '' ? 'active' : '' ?> ">
-                  <i class="nav-icon fa fa-desktop"></i>
+                <a href="<?= base_url('diagnosis') ?>" class="nav-link <?= $seg == 'diagnosis' ? 'active' : '' ?> ">
+                  <i class="fa-solid fa-stethoscope"></i>
                   <p>
                     Diagnosis
                   </p>
@@ -59,8 +60,8 @@
 
               <li class="nav-header ">Master</li>
               <li class="nav-item">
-                <a href="<?= base_url('obat') ?>" class="nav-link <?= $seg == 'obat' || $seg == '' ? 'active' : '' ?> ">
-                  <i class="nav-icon fa fa-desktop"></i>
+                <a href="<?= base_url('obat') ?>" class="nav-link <?= $seg == 'obat' ? 'active' : '' ?> ">
+                  <i class="fa-solid fa-pills"></i>
                   <p>
                     Obat
                   </p>
@@ -77,7 +78,7 @@
               <li class="nav-header ">PENGGUNA</li>
               <li class="nav-item <?= $seg == 'user' || $seg == 'pasien' ? 'menu-open menu-is-open' : '' ?>">
                 <a href="#" class="nav-link ">
-                  <i class="nav-icon fa fa-desktop"></i>
+                  <i class="nav-icon fa fa-users"></i>
                   <p>
                     User
                     <i class="end fas fa-angle-left"></i>
@@ -86,13 +87,13 @@
                 <ul class="nav nav-treeview">
                   <li class="nav-item">
                     <a href="<?= base_url('user') ?>" class="nav-link <?= $seg == 'user' ? 'active' : '' ?>">
-                      <i class="nav-icon far fa-circle"></i>
+                      <i class="nav-icon far fa-user"></i>
                       <p>Pengguna</p>
                     </a>
                   </li>
                   <li class="nav-item">
                     <a href="<?= base_url('pasien') ?>" class="nav-link <?= $seg == 'pasien' ? 'active' : '' ?>">
-                      <i class="nav-icon far fa-circle"></i>
+                      <i class="nav-icon fa fa-users-line"></i>
                       <p>Pasien</p>
                     </a>
                   </li>

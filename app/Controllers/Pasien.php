@@ -91,6 +91,7 @@ class Pasien extends BaseController
 		$fields['jenis_kelamin'] = $this->request->getPost('jenis_kelamin');
 		$fields['alamat'] = $this->request->getPost('alamat');
 		$fields['nama_orang_tua'] = $this->request->getPost('nama_orang_tua');
+		$fields['umur'] = $this->request->getPost('umur');
 		$fields['no_telepon'] = $this->request->getPost('no_telepon');
 		$fields['created_at'] = date('Y-m-d H:i:s');
 
@@ -102,6 +103,7 @@ class Pasien extends BaseController
 			'alamat' => ['label' => 'Alamat', 'rules' => 'required|min_length[0]'],
 			'nama_orang_tua' => ['label' => 'Nama orang tua', 'rules' => 'required|min_length[0]|max_length[255]'],
 			'no_telepon' => ['label' => 'No telepon', 'rules' => 'required|min_length[0]|max_length[15]'],
+			'umur' => ['label' => 'Umur', 'rules' => 'required|integer'],
 			'created_at' => ['label' => 'Created at', 'rules' => 'permit_empty|valid_date|min_length[0]'],
 			'updated_at' => ['label' => 'Updated at', 'rules' => 'permit_empty|valid_date|min_length[0]'],
 
@@ -137,6 +139,7 @@ class Pasien extends BaseController
 		$fields['tanggal_lahir'] = $this->request->getPost('tanggal_lahir');
 		$fields['jenis_kelamin'] = $this->request->getPost('jenis_kelamin');
 		$fields['alamat'] = $this->request->getPost('alamat');
+		$fields['umur'] = $this->request->getPost('umur');
 		$fields['nama_orang_tua'] = $this->request->getPost('nama_orang_tua');
 		$fields['no_telepon'] = $this->request->getPost('no_telepon');
 		$fields['updated_at'] = date('Y-m-d H:i:s');
@@ -148,6 +151,7 @@ class Pasien extends BaseController
 			'jenis_kelamin' => ['label' => 'Jenis kelamin', 'rules' => 'required'],
 			'alamat' => ['label' => 'Alamat', 'rules' => 'required|min_length[0]'],
 			'nama_orang_tua' => ['label' => 'Nama orang tua', 'rules' => 'required|min_length[0]|max_length[255]'],
+			'umur' => ['label' => 'Umur', 'rules' => 'required|integer'],
 			'no_telepon' => ['label' => 'No telepon', 'rules' => 'required|min_length[0]|max_length[15]'],
 			'created_at' => ['label' => 'Created at', 'rules' => 'permit_empty|valid_date|min_length[0]'],
 			'updated_at' => ['label' => 'Updated at', 'rules' => 'permit_empty|valid_date|min_length[0]'],
