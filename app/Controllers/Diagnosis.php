@@ -24,6 +24,7 @@ class Diagnosis extends BaseController
 	protected $penyakitModel;
 	protected $obatModel;
 	protected $validation;
+	protected $db;
 
 	public function __construct()
 	{
@@ -34,6 +35,7 @@ class Diagnosis extends BaseController
 		$this->penyakitModel = new PenyakitModel();
 		$this->obatModel = new ObatModel();
 		$this->diagnosisObat = new DiagnosisObatModel();
+		$this->db = \Config\Database::connect();
 		$this->validation =  \Config\Services::validation();
 	}
 
@@ -51,24 +53,38 @@ class Diagnosis extends BaseController
 	public function create()
 	{
 
+		// Ambil semua pendaftaran pasien untuk hari ini
 		$pendaftaran = $this->pendaftaranModel->where('tanggal_daftar', date('Y-m-d'))->findAll();
-		$pasienData = array_map(function ($item) {
-			return [
-				'pasien_id' => $item->pasien_id,
-				'nama_pasien' => $this->pasienModel->where('id', $item->pasien_id)->first()->nama,
-			];
+
+		// Ekstrak ID pasien dari pendaftaran
+		$pasienIds = array_map(function ($item) {
+			return $item->pasien_id;
 		}, $pendaftaran);
+
+		// Ambil pasien yang belum didiagnosis hari ini
+		$pasienData = $this->pasienModel->select('tbl_pasien.id, tbl_pasien.nama')
+			->join('tbl_diagnosis dg', 'dg.pasien_id = tbl_pasien.id', 'left')
+			->whereIn('tbl_pasien.id', $pasienIds)
+			->where('dg.id IS NULL')
+			->findAll();
+
+		// Format hasil sesuai kebutuhan
+		$filteredPasienData = array_map(function ($item) {
+			return [
+				'pasien_id' => $item->id,
+				'nama_pasien' => $item->nama,
+			];
+		}, $pasienData);
 
 
 		$data = [
 			'controller'    	=> 'diagnosis',
 			'title'     		=> 'Form Diagnosis Pasien',
-			'pasien'			=> $pasienData,
+			'pasien'			=> $filteredPasienData,
 			'penyakit'			=> $this->penyakitModel->findAll(),
 			'obat'				=> $this->obatModel->findAll(),
 		];
 
-		// dd($data);
 		return view('diagnosis/form', $data);
 	}
 
@@ -131,11 +147,7 @@ class Diagnosis extends BaseController
 	public function add()
 	{
 		$response = array();
-
-		$db = \Config\Database::connect();
-		$validation = \Config\Services::validation();
-
-		// Set rules for validation
+		// Set rules untuk validation
 		$rules = [
 			'id_diagnosis' => 'permit_empty|is_natural',
 			'pasien_data' => 'required|is_natural_no_zero',
@@ -144,28 +156,27 @@ class Diagnosis extends BaseController
 			'tanggal_diagnosis' => 'required|valid_date',
 			'catatan' => 'permit_empty|string',
 			'pilih_obat' => 'required|is_array',
-			'pilih_obat.*' => 'is_natural_no_zero', // Each item in the array should be a non-zero natural number
+			'pilih_obat.*' => 'is_natural_no_zero', // mengatur pilih obat agar tidak kosong
 			'nama_obat' => 'required|string',
 			'dosis' => 'required|string'
 		];
 
-		// Get all POST data
+		// mengambil semua request
 		$fields = $this->request->getPost();
 
-		// Validate the data
+		// Validate data
 		if (!$this->validate($rules)) {
-			// If validation fails
+			// jika validation gagal
 			$response = [
 				'success' => false,
-				'messages' => $validation->getErrors() // Show errors in input form
+				'messages' => $this->validation->getErrors() // Muncul error di form input
 			];
 			return $this->response->setJSON($response);
 		}
 
 		$obat = $this->request->getPost('pilih_obat');
 
-		// Start Transaction
-		$db->transStart();
+		$this->db->transStart();
 
 		try {
 
@@ -190,19 +201,17 @@ class Diagnosis extends BaseController
 				];
 			}, $obat);
 
-			// var_dump($obatData);die;
 			// Save Pendaftaran
 			$this->diagnosisObat->insertBatch($obatData);
-			// Commit Transaction
-			$db->transCommit();
+
+			$this->db->transCommit();
 
 			$response = [
 				'success' => true,
 				'messages' => 'Berhasil menyimpan data'
 			];
 		} catch (\Exception $e) {
-			// Rollback Transaction if any error occurs
-			$db->transRollback();
+			$this->db->transRollback();
 			$response = [
 				'success' => false,
 				'messages' => 'Data gagal disimpan: ' . $e->getMessage()
@@ -213,9 +222,11 @@ class Diagnosis extends BaseController
 	}
 	public function edit($id_diagnosis)
 	{
+
+		//menyiapkan data yang di perlukan
 		$data = [
 			'controller'    	=> 'diagnosis',
-			'title'     		=> 'Form Diagnosis Pasien',
+			'title'     		=> 'Form Ubah Diagnosis Pasien',
 		];
 		$data['diagnosis'] = $this->diagnosisModel->find($id_diagnosis);
 
@@ -227,12 +238,10 @@ class Diagnosis extends BaseController
 			];
 		}, $pendaftaran);
 
-		// Fetch other data needed for form options
 		$data['pasien'] = $pasienData;
 		$data['penyakit'] = $this->penyakitModel->findAll();
 		$data['obat'] = $this->obatModel->findAll();
 
-		// Get the related diagnosis_obat data
 		$data['diagnosisObat'] = $this->diagnosisObat->where('diagnosis_id', $id_diagnosis)->findAll();
 		$data['selectedObatIds'] = array_column($data['diagnosisObat'], 'obat_id');
 
@@ -243,41 +252,77 @@ class Diagnosis extends BaseController
 
 	public function update()
 	{
+
 		$response = array();
+		$rules = [
+			'id_diagnosis' => 'permit_empty|is_natural',
+			'pasien_data' => 'required|is_natural_no_zero',
+			'keluhan' => 'required|string',
+			'penyakit_data' => 'required|is_natural_no_zero',
+			'tanggal_diagnosis' => 'required|valid_date',
+			'catatan' => 'permit_empty|string',
+			'pilih_obat' => 'required|is_array',
+			'pilih_obat.*' => 'is_natural_no_zero',
+			'nama_obat' => 'required|string',
+			'dosis' => 'required|string'
+		];
 
-		$fields['id'] = $this->request->getPost('id');
-		$fields['pasien_id'] = $this->request->getPost('pasien_id');
-		$fields['penyakit_id'] = $this->request->getPost('penyakit_id');
-		$fields['tanggal_diagnosis'] = $this->request->getPost('tanggal_diagnosis');
-		$fields['catatan'] = $this->request->getPost('catatan');
-		$fields['id_user'] = $this->request->getPost('id_user');
+		$fields = $this->request->getPost();
 
+		if (!$this->validate($rules)) {
+			$response = [
+				'success' => false,
+				'messages' => $this->validation->getErrors()
+			];
+			return $this->response->setJSON($response);
+		}
 
-		$this->validation->setRules([
-			'pasien_id' => ['label' => 'Pasien id', 'rules' => 'required|numeric|min_length[0]'],
-			'penyakit_id' => ['label' => 'Penyakit id', 'rules' => 'required|numeric|min_length[0]'],
-			'tanggal_diagnosis' => ['label' => 'Tanggal diagnosis', 'rules' => 'required|valid_date|min_length[0]'],
-			'catatan' => ['label' => 'Catatan', 'rules' => 'required|min_length[0]'],
-			'id_user' => ['label' => 'Id user', 'rules' => 'required|numeric|min_length[0]'],
+		$obat = $this->request->getPost('pilih_obat');
+		$this->db->transStart();
 
-		]);
+		try {
 
-		if ($this->validation->run($fields) == FALSE) {
+			$fieldsDiagnosis = [
+				'id' => $this->request->getPost('id_diagnosis'),
+				'pasien_id' => $this->request->getPost('pasien_data'),
+				'penyakit_id' => $this->request->getPost('penyakit_data'),
+				'tanggal_diagnosis' => $this->request->getPost('tanggal_diagnosis'),
+				'catatan' => $this->request->getPost('catatan'),
+				'updated_at' => date('Y-m-d'),
+				// 'id_user' => session()->get('user_id')
+			];
 
-			$response['success'] = false;
-			$response['messages'] = $this->validation->getErrors(); //Show Error in Input Form
+			$this->diagnosisModel->update($fieldsDiagnosis['id'], $fieldsDiagnosis);
 
-		} else {
+			$findCreated_at = $this->diagnosisObat->select('created_at')->where(['diagnosis_id' => $fieldsDiagnosis['id']])->first();
+			$created_at = isset($findCreated_at->created_at) ? $findCreated_at->created_at : date('Y-m-d H:i:s');
+			$this->db->table('diagnosis_obat')->delete(['diagnosis_id' => $fieldsDiagnosis['id']]);
 
-			if ($this->diagnosisModel->update($fields['id'], $fields)) {
+			$obatData = array_map(function ($item) use ($fieldsDiagnosis, $created_at) {
+				return [
+					// 'id'	=> '',
+					'obat_id' => $item,
+					'diagnosis_id' => $fieldsDiagnosis['id'],
+					'created_at' => $created_at,
+					'updated_at' => date('Y-m-d H:i:s')
+				];
+			}, $obat);
 
-				$response['success'] = true;
-				$response['messages'] = lang("Berhasil perbarui data");
-			} else {
+			// Save Pendaftaran
+			$this->diagnosisObat->insertBatch($obatData);
 
-				$response['success'] = false;
-				$response['messages'] = lang("Gagal Perbarui data");
-			}
+			$this->db->transCommit();
+
+			$response = [
+				'success' => true,
+				'messages' => 'Berhasil ubah data'
+			];
+		} catch (\Exception $e) {
+			$this->db->transRollback();
+			$response = [
+				'success' => false,
+				'messages' => 'Gagal ubah data: ' . $e->getMessage()
+			];
 		}
 
 		return $this->response->setJSON($response);

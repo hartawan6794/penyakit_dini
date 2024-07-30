@@ -42,7 +42,7 @@
                                 <div class="col-md-12">
                                     <div class="form-group">
                                         <label for="pasien_data" class="col-form-label"> Pilih Pasien: <span class="text-danger">*</span> </label>
-                                        <select name="pasien_data" id="pasien_data" class="form-control">
+                                        <select name="pasien_data" id="pasien_data" class="form-control" disabled>
                                             <option value="">Pilih Pasien</option>
                                             <?php foreach ($pasien as $value) : ?>
                                                 <option value="<?= $value['id'] ?>" <?= $diagnosis->pasien_id == $value['id'] ? 'selected' : '' ?>><?= $value['nama'] ?></option>
@@ -75,7 +75,7 @@
                             <div class="row">
                                 <div class="col-md-12">
                                     <div class="form-group">
-                                        <label for="tanggal_diagnosis" class="col-form-label">Tanggal Diagnosis Penyakit: <span class="text-danger">*</span> </label>
+                                        <label for="tanggal_diagnosis" class="col-form-label">Tanggal Diagnosis: <span class="text-danger">*</span> </label>
                                         <input type="date" id="tanggal_diagnosis" name="tanggal_diagnosis" class="form-control" value="<?= $diagnosis->tanggal_diagnosis ?>" required>
                                     </div>
                                 </div>
@@ -194,7 +194,7 @@
                 });
             });
 
-            // console.log(formData)
+             console.log(formData)
             $(".text-danger").remove();
             $.ajax({
                 url: '<?= base_url($controller . "/update") ?>',
