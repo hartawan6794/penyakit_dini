@@ -10,7 +10,7 @@
         <h3 class="card-title">Diagnosis Pasien</h3>
       </div>
       <div class="col-3">
-        <button type="button" class="btn float-end btn-success" onclick="save()" title="<?= lang("Tambah") ?>"> <i class="fa fa-plus"></i> <?= lang('Tambah') ?></button>
+        <a href="diagnosis/create" class="btn float-end btn-success" title="<?= lang("Tambah") ?>"> <i class="fa fa-plus"></i> <?= lang('Tambah') ?></a>
       </div>
     </div>
   </div>
