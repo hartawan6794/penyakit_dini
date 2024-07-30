@@ -212,14 +212,14 @@ class Pendaftaran extends BaseController
 
 			$response = [
 				'success' => true,
-				'messages' => 'Data has been successfully saved.'
+				'messages' => 'Berhasil menyimpan data'
 			];
 		} catch (\Exception $e) {
 			// Rollback Transaction if any error occurs
 			$db->transRollback();
 			$response = [
 				'success' => false,
-				'messages' => 'Failed to save data: ' . $e->getMessage()
+				'messages' => 'Data gagal disimpan: ' . $e->getMessage()
 			];
 		}
 
