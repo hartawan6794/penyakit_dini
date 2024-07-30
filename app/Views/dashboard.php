@@ -37,6 +37,13 @@ $masterModel = new MasterModel();
     height: 200px;
     /* Atur tinggi sesuai kebutuhan */
   }
+
+  @media (min-wdth:1400px) {
+    .row>.col-md-6 {
+      flex: 0 0 50%;
+      max-width: 50%;
+    }
+  }
 </style>
 
 <div class="row">

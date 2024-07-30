@@ -18,7 +18,7 @@
             <li class="nav-header ">Menu Aplikasi</li>
               <li class="nav-item">
                 <a href="<?= base_url('home') ?>" class="nav-link <?= $seg == 'home'  || $seg == ''  ? 'active' : '' ?> ">
-                  <i class="nav-icon fa fa-desktop"></i>
+                  <i class="fa-solid fa fa-desktop"></i>
                   <p>
                     Dashboard
                   </p>
@@ -49,11 +49,20 @@
                 </a>
               </li>
 
+              <li class="nav-header ">Diagnosis</li>
               <li class="nav-item">
                 <a href="<?= base_url('diagnosis') ?>" class="nav-link <?= $seg == 'diagnosis' ? 'active' : '' ?> ">
                   <i class="fa-solid fa-stethoscope"></i>
                   <p>
-                    Diagnosis
+                    Diagnosis Pasien
+                  </p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="<?= base_url('monitoring') ?>" class="nav-link <?= $seg == 'monitoring' ? 'active' : '' ?> ">
+                  <i class="fa-solid fa-stethoscope"></i>
+                  <p>
+                    Monitoring Obat
                   </p>
                 </a>
               </li>

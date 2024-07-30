@@ -75,7 +75,7 @@
                             <div class="row">
                                 <div class="col-md-12">
                                     <div class="form-group">
-                                        <label for="tanggal_diagnosis" class="col-form-label">Tanggal Diagnosis Penyakit: <span class="text-danger">*</span> </label>
+                                        <label for="tanggal_diagnosis" class="col-form-label">Tanggal Diagnosis: <span class="text-danger">*</span> </label>
                                         <input type="date" id="tanggal_diagnosis" name="tanggal_diagnosis" class="form-control" dateISO="true" required>
                                     </div>
                                 </div>
