@@ -12,6 +12,7 @@ use App\Models\ObatModel;
 use App\Models\PasienModel;
 use App\Models\PendaftaranModel;
 use App\Models\PenyakitModel;
+use App\Models\UserModel;
 
 class Diagnosis extends BaseController
 {
@@ -23,6 +24,7 @@ class Diagnosis extends BaseController
 	protected $keluhanModel;
 	protected $penyakitModel;
 	protected $obatModel;
+	protected $userModel;
 	protected $validation;
 	protected $db;
 
@@ -34,6 +36,7 @@ class Diagnosis extends BaseController
 		$this->keluhanModel = new KeluhanModel();
 		$this->penyakitModel = new PenyakitModel();
 		$this->obatModel = new ObatModel();
+		$this->userModel = new UserModel();
 		$this->diagnosisObat = new DiagnosisObatModel();
 		$this->db = \Config\Database::connect();
 		$this->validation =  \Config\Services::validation();
@@ -41,7 +44,6 @@ class Diagnosis extends BaseController
 
 	public function index()
 	{
-
 		$data = [
 			'controller'    	=> 'diagnosis',
 			'title'     		=> 'Diagnosis Pasien'
@@ -54,27 +56,26 @@ class Diagnosis extends BaseController
 	{
 
 		// Ambil semua pendaftaran pasien untuk hari ini
-		$pendaftaran = $this->pendaftaranModel->where('tanggal_daftar', date('Y-m-d'))->findAll();
-
-		// Ekstrak ID pasien dari pendaftaran
-		$pasienIds = array_map(function ($item) {
-			return $item->pasien_id;
-		}, $pendaftaran);
-
-		// Ambil pasien yang belum didiagnosis hari ini
-		$pasienData = $this->pasienModel->select('tbl_pasien.id, tbl_pasien.nama')
-			->join('tbl_diagnosis dg', 'dg.pasien_id = tbl_pasien.id', 'left')
-			->whereIn('tbl_pasien.id', $pasienIds)
+		$pendaftaran = $this->pendaftaranModel->select('p.id, p.nama, pendaftaran_pasien.no_pendaftaran')
+			->join('tbl_pasien p', 'p.id = pendaftaran_pasien.pasien_id')
+			->join('tbl_diagnosis dg', 'dg.pasien_id = p.id', 'left')
+			->where('tanggal_daftar', date('Y-m-d'))
 			->where('dg.id IS NULL')
 			->findAll();
 
-		// Format hasil sesuai kebutuhan
-		$filteredPasienData = array_map(function ($item) {
-			return [
-				'pasien_id' => $item->id,
-				'nama_pasien' => $item->nama,
-			];
-		}, $pasienData);
+		// dd(count($pasienIds));
+
+		$filteredPasienData = [];
+
+		if (count($pendaftaran) > 0) {
+			$filteredPasienData = array_map(function ($item) {
+				return [
+					'pasien_id' => $item->id,
+					'nama_pasien' => $item->no_pendaftaran . ' - ' . $item->nama,
+				];
+			}, $pendaftaran);
+		}
+		// dd($filteredPasienData);
 
 
 		$data = [
@@ -87,7 +88,6 @@ class Diagnosis extends BaseController
 
 		return view('diagnosis/form', $data);
 	}
-
 	public function getKeluhan()
 	{
 		$pasien_id = $this->request->getPost('pasien_id');
@@ -107,6 +107,7 @@ class Diagnosis extends BaseController
 			$ops .= '<button type="button" class=" btn btn-sm dropdown-toggle btn-info" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">';
 			$ops .= '<i class="fa-solid fa-pen-square"></i>  </button>';
 			$ops .= '<div class="dropdown-menu">';
+			$ops .= '<a  class="dropdown-item text-success" onClick="detail(' . $value->id . ')"><i class="fa-solid fa-eye" ></i>   ' .  lang("Detail")  . '</a>';
 			$ops .= '<a href="/diagnosis/edit/' . $value->id . '" class="dropdown-item text-info"><i class="fa-solid fa-pen-to-square"></i>   ' .  lang("Ubah")  . '</a>';
 			$ops .= '<div class="dropdown-divider"></div>';
 			$ops .= '<a class="dropdown-item text-danger" onClick="remove(' . $value->id . ')"><i class="fa-solid fa-trash"></i>   ' .  lang("Hapus")  . '</a>';
@@ -119,7 +120,8 @@ class Diagnosis extends BaseController
 				// $value->penyakit_id,
 				$value->tanggal_diagnosis,
 				$value->catatan,
-				$value->id_user,
+				$this->userModel->where('id_user', $value->id_user)->first()->nama,
+				// $value->id_user,
 
 				$ops
 			);
@@ -135,8 +137,8 @@ class Diagnosis extends BaseController
 		$id = $this->request->getPost('id');
 
 		if ($this->validation->check($id, 'required|numeric')) {
-
-			$data = $this->diagnosisModel->where('id', $id)->first();
+			$data = $this->diagnosisModel->detail_diagnosis($id);
+			// var_dump($data);die;
 
 			return $this->response->setJSON($data);
 		} else {
@@ -249,7 +251,6 @@ class Diagnosis extends BaseController
 		// dd($data);
 		return view('diagnosis/edit', $data);
 	}
-
 	public function update()
 	{
 
@@ -351,5 +352,14 @@ class Diagnosis extends BaseController
 		}
 
 		return $this->response->setJSON($response);
+	}
+
+	public function obat($id = null){
+		$response = array();
+
+		$detail = $this->diagnosisObat->select('to.*')->join('tbl_obat to','to.id = diagnosis_obat.obat_id')->where('diagnosis_obat.diagnosis_id', $id)->findAll();
+		// var_dump($detail);die;
+		return $this->response->setJSON($detail);
+
 	}
 }

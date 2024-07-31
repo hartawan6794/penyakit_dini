@@ -10,7 +10,7 @@
         <h3 class="card-title">Monitorng Obat</h3>
       </div>
       <div class="col-3">
-        <button type="button" class="btn float-end btn-success" onclick="save()" title="<?= lang("Tambah") ?>"> <i class="fa fa-plus"></i> <?= lang('Tambah') ?></button>
+        <!-- <button type="button" class="btn float-end btn-success" onclick="save()" title="<?= lang("Tambah") ?>"> <i class="fa fa-plus"></i> <?= lang('Tambah') ?></button> -->
       </div>
     </div>
   </div>

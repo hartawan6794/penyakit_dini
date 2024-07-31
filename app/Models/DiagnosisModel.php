@@ -19,4 +19,10 @@ class DiagnosisModel extends Model {
 	protected $validationMessages = [];
 	protected $skipValidation     = true;    
 	
+	public function detail_diagnosis($kondisi)
+	{
+		$sql = "SELECT * FROM vw_diagnosis WHERE diagnosis_id = '$kondisi'";
+		$query = $this->db->query($sql);
+		return $query->getRow();;
+	}
 }

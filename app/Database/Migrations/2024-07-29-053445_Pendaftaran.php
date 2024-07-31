@@ -15,6 +15,10 @@ class Pendaftaran extends Migration
                 'unsigned' => true,
                 'auto_increment' => true,
             ],
+            'no_pendaftaran' => [
+                'type' => 'VARCHAR',
+                'constraint' => '255',
+            ],
             'pasien_id' => [
                 'type' => 'INT',
                 'unsigned' => true,
