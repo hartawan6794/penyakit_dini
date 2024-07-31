@@ -76,7 +76,7 @@
                                 <div class="col-md-12">
                                     <div class="form-group">
                                         <label for="tanggal_diagnosis" class="col-form-label">Tanggal Diagnosis: <span class="text-danger">*</span> </label>
-                                        <input type="date" id="tanggal_diagnosis" name="tanggal_diagnosis" class="form-control" dateISO="true" required>
+                                        <input type="date" id="tanggal_diagnosis" name="tanggal_diagnosis" class="form-control" dateISO="true" required readonly>
                                     </div>
                                 </div>
                             </div>
@@ -140,6 +140,20 @@
 <?= $this->section("pageScript") ?>
 
 <script>
+    document.getElementById('tanggal_diagnosis').setAttribute('max', new Date().toISOString().split('T')[0]);
+
+    const tanggalInput = document.getElementById('tanggal_diagnosis');
+    tanggalInput.addEventListener('click', function() {
+      this.removeAttribute('readonly');
+    });
+
+    tanggalInput.addEventListener('blur', function() {
+      this.setAttribute('readonly', true);
+    });
+
+    tanggalInput.addEventListener('change', function() {
+      this.setAttribute('readonly', true);
+    });
     $(function() {
         $("#pasien_data").select2({
             placeholder: "Pilih Pasien....",

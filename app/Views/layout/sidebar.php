@@ -15,7 +15,7 @@
           <nav class="mt-2">
             <!-- Sidebar Menu -->
             <ul class="nav nav-pills nav-sidebar flex-column" data-lte-toggle="treeview" role="menu" data-accordion="false">
-            <li class="nav-header ">Menu Aplikasi</li>
+              <li class="nav-header ">Menu Aplikasi</li>
               <li class="nav-item">
                 <a href="<?= base_url('home') ?>" class="nav-link <?= $seg == 'home'  || $seg == ''  ? 'active' : '' ?> ">
                   <i class="fa-solid fa fa-desktop"></i>
@@ -64,6 +64,16 @@
                   <i class="fa-solid fa-tv"></i>
                   <p>
                     Monitoring Obat
+                  </p>
+                </a>
+              </li>
+
+              <li class="nav-header ">Laporan</li>
+              <li class="nav-item">
+                <a href="<?= base_url('laporan') ?>" class="nav-link <?= $seg == 'laporan' ? 'active' : '' ?> ">
+                  <i class="fa fa-print" aria-hidden="true"></i>
+                  <p>
+                    Laporan Diagnosis Pasien
                   </p>
                 </a>
               </li>

@@ -47,8 +47,6 @@
         }
     </style>
     <script src="<?= base_url('asset/js/jquery-3.6.0.min.js') ?>"></script>
-
-
 </head>
 
 <body>

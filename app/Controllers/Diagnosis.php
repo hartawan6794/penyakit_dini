@@ -362,4 +362,6 @@ class Diagnosis extends BaseController
 		return $this->response->setJSON($detail);
 
 	}
+
+	
 }
