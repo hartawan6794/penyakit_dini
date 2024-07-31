@@ -1,12 +1,12 @@
 <?= $this->extend("layout/master") ?>
 <?= $this->section("content") ?>
 <style>
-  .card{
+  .card {
     border-radius: 15px !important;
   }
 
-  .card-header{
-    background-color:#198754 !important;
+  .card-header {
+    background-color: #198754 !important;
     color: white !important;
   }
 </style>
@@ -33,7 +33,7 @@
       <div class="card-body">
         <form class="form-pendaftaran" class="pl-3 pr-3">
           <div class="row">
-            <input type="hidden" id="id_pasien" name="id_pasien" class="form-control" placeholder="id_pasien" required> 
+            <input type="text" id="id_pasien" name="id_pasien" class="form-control" placeholder="id_pasien" required>
             <input type="hidden" id="id" name="id" class="form-control" placeholder="id" required>
           </div>
           <div class="row">
@@ -106,7 +106,7 @@
             <div class="col-md-12">
               <div class="form-group mb-3">
                 <label for="tanggal_keluhan" class="col-form-label"> Tanggal Mulai Keluhan: <span class="text-danger">*</span> </label>
-                <input type="date" id="tanggal_keluhan" name="tanggal_keluhan" class="form-control" dateISO="true" required>
+                <input type="date" id="tanggal_keluhan" name="tanggal_keluhan" class="form-control" dateISO="true" max="<?= date('m-d-Y') ?>" required readonly>
               </div>
             </div>
             <div class="col-md-6">
@@ -169,6 +169,23 @@
 <?= $this->section("pageScript") ?>
 <script>
   $(function() {
+    document.getElementById('tanggal_keluhan').setAttribute('max', new Date().toISOString().split('T')[0]);
+    document.getElementById('tanggal_lahir').setAttribute('max', new Date().toISOString().split('T')[0]);
+
+
+    const tanggalInput = document.getElementById('tanggal_keluhan');
+    tanggalInput.addEventListener('click', function() {
+      this.removeAttribute('readonly');
+    });
+
+    tanggalInput.addEventListener('blur', function() {
+      this.setAttribute('readonly', true);
+    });
+
+    tanggalInput.addEventListener('change', function() {
+      this.setAttribute('readonly', true);
+    });
+    
     $('#search-pasien').on('click', function() {
       $('#pasien-modal').modal('show')
       if ($.fn.DataTable.isDataTable('#data_table_pasien')) {
@@ -194,11 +211,11 @@
 
     // Add event listener to remove 'is-invalid' class on input change
     $('.form-pendaftaran').find(':input').on('input change', function() {
-        $(this).removeClass('is-invalid');
-        $(this).addClass('is-valid');
-        $(this).closest('.form-control').removeClass('is-invalid').find('.invalid-feedback').remove();
+      $(this).removeClass('is-invalid');
+      $(this).addClass('is-valid');
+      $(this).closest('.form-control').removeClass('is-invalid').find('.invalid-feedback').remove();
     });
-    
+
     $('#form-btn').on('click', function(e) {
       e.preventDefault(); // Mencegah form submit default
       $(".form-pendaftaran").removeClass('is-invalid').removeClass('is-valid'); // Hapus kelas is-invalid dan is-valid

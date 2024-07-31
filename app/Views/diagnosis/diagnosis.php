@@ -91,6 +91,19 @@
           </div>
         </div>
         <div class="row">
+          <h1 class="h5">Diagnosis Pasien</h1>
+          <div class="table-responsive">
+            <table class="table table-bordered no-margin">
+              <tbody>
+                <tr>
+                  <th style="width: 20%;">Catatan</th>
+                  <td style="width: 30%;"><span id="catatan"></span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="row">
           <h1 class="h5">Data Obat</h1>
           <div class="table-responsive">
             <table class="table table-bordered no-margin">
@@ -170,6 +183,7 @@
       success: function(response) {
         $("#data-modal #no_pendaftaran").text(response.no_pendaftaran);
         $("#data-modal #nama").text(response.nama);
+        $("#data-modal #catatan").text(response.catatan);
         $("#data-modal #umur").text(response.umur + ' Tahun');
         $("#data-modal #keluhan").text(response.keluhan);
         $("#data-modal #nama_penyakit").text(response.nama_penyakit);

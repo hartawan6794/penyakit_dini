@@ -72,7 +72,11 @@ class Pendaftaran extends BaseController
 	{
 		$response = $data['data'] = array();
 
-		$result = $this->pasienModel->select()->findAll();
+		$result = $this->pasienModel->select('tbl_pasien.*')
+		->join('pendaftaran_pasien tp', 'tp.pasien_id = tbl_pasien.id', 'left')
+		->where('tp.id IS NULL')
+		->findAll();
+		// var_dump($result);die;
 		$no = 1;
 		foreach ($result as $key => $value) {
 			$ops = '<button class="btn btn-block btn-info" id="pilih_pasien"
@@ -272,7 +276,7 @@ class Pendaftaran extends BaseController
 
 		$id = $this->request->getPost('id');
 
-		if (!$this->validation->check($id, 'required|numeric')) {
+		if(!$this->validation->check($id, 'required|numeric')) {
 
 			throw new \CodeIgniter\Exceptions\PageNotFoundException();
 		} else {
