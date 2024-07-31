@@ -20,6 +20,7 @@
       <thead>
         <tr>
           <th>No</th>
+          <th>No Pendaftaran</th>
           <th>Nama Pasien</th>
           <th>Keluhan Pasien</th>
           <th>Tanggal daftar</th>

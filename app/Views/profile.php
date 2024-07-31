@@ -18,7 +18,7 @@ $this->roleModel = new RolesModel();
         </div>
         <div class="card-body box-profile">
             <div class="text-center">
-                <img class="user-image img-circle shadow" style="height: 128px; width: 128px" src="<?= session()->get('img_user') ? base_url('/img/user/' . session()->get('img_user')) : base_url('/asset/img/user.jpg') ?>" alt="User profile picture">
+                <img class="user-image img-circle shadow" style="height: 128px; width: 128px" src="<?= session()->get('img_user') ? base_url('/img/user/' . session()->get('img_user')) : base_url('/asset/img/user.png') ?>" alt="User profile picture">
             </div>
             <h3 class="profile-username text-center mt-3"><?= session()->get('nama') ?></h3>
             <p class="text-muted text-center"><?= $this->roleModel->select('name')->where('id', session()->get('id_role'))->first()->name ?></p>

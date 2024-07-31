@@ -55,6 +55,7 @@ class Pendaftaran extends BaseController
 
 			$data['data'][$key] = array(
 				$no++,
+				$value->no_pendaftaran,
 				$this->pasienModel->where('id',$value->pasien_id)->first()->nama,
 				$this->keluhanModel->where('id',$value->keluhan_id)->first()->keluhan,
 				$value->tanggal_daftar,
@@ -168,6 +169,7 @@ class Pendaftaran extends BaseController
 		try {
 			$fieldsPendaftaran = [
 				'id' => $this->request->getPost('id'),
+				'no_pendaftaran' => $this->pendaftaranModel->no_pendaftaran(),
 				'tanggal_daftar' => date('Y-m-d H:i:s'),
 				'deskripsi' => $fields['deskripsi'],
 				'id_user' => session()->get('user_id')

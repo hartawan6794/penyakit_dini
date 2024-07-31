@@ -20,11 +20,11 @@
       <thead>
         <tr>
           <th>No</th>
-          <th>Pasien id</th>
-          <th>Penyakit id</th>
+          <th>Nama Pasien</th>
+          <th>Nama Penyakit</th>
           <th>Tanggal diagnosis</th>
           <th>Catatan</th>
-          <th>Id user</th>
+          <th>Petugas</th>
           <th></th>
         </tr>
       </thead>
@@ -38,50 +38,77 @@
 
 <!-- ADD modal content -->
 <div id="data-modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-md">
+  <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-lg">
     <div class="modal-content">
       <div class="text-center bg-info p-3" id="model-header">
-        <h4 class="modal-title text-white" id="info-header-modalLabel"></h4>
+        <h4 class="modal-title text-white" id="info-header-modalLabel">Detail Diagnosis</h4>
       </div>
       <div class="modal-body">
-        <form id="data-form" class="pl-3 pr-3">
-          <div class="row">
-            <input type="hidden" id="id" name="id" class="form-control" placeholder="Id" required>
+        <div class="row">
+          <h1 class="h5">Data Pasien</h1>
+          <div class="table-responsive">
+            <table class="table table-bordered no-margin">
+              <tbody>
+                <tr>
+                  <th style="width: 20%;">No Pendaftaran</th>
+                  <td style="width: 30%;"><span id="no_pendaftaran"></span></td>
+                </tr>
+                <tr>
+                  <th style="width: 20%;">Nama Pasien</th>
+                  <td style="width: 30%;"><span id="nama"></span></td>
+                </tr>
+                <tr>
+                  <th style="width: 20%;">Umur</th>
+                  <td style="width: 30%;"><span id="umur"></span></td>
+                </tr>
+                <tr>
+                  <th style="width: 20%;">Keluhan</th>
+                  <td style="width: 30%;"><span id="keluhan"></span></td>
+                </tr>
+              </tbody>
+            </table>
           </div>
-          <div class="row">
-            <div class="col-md-12">
-              <div class="form-group mb-3">
-                <label for="pasien_id" class="col-form-label"> Pasien id: <span class="text-danger">*</span> </label>
-                <input type="number" id="pasien_id" name="pasien_id" class="form-control" placeholder="Pasien id" minlength="0" required>
-              </div>
-            </div>
-            <div class="col-md-12">
-              <div class="form-group mb-3">
-                <label for="penyakit_id" class="col-form-label"> Penyakit id: <span class="text-danger">*</span> </label>
-                <input type="number" id="penyakit_id" name="penyakit_id" class="form-control" placeholder="Penyakit id" minlength="0" required>
-              </div>
-            </div>
-            <div class="col-md-12">
-              <div class="form-group mb-3">
-                <label for="tanggal_diagnosis" class="col-form-label"> Tanggal diagnosis: <span class="text-danger">*</span> </label>
-                <input type="date" id="tanggal_diagnosis" name="tanggal_diagnosis" class="form-control" dateISO="true" required>
-              </div>
-            </div>
-            <div class="col-md-12">
-              <div class="form-group mb-3">
-                <label for="catatan" class="col-form-label"> Catatan: <span class="text-danger">*</span> </label>
-                <textarea cols="40" rows="5" id="catatan" name="catatan" class="form-control" placeholder="Catatan" minlength="0" required></textarea>
-              </div>
-            </div>
+        </div>
+        <div class="row">
+          <h1 class="h5">Data Penyakit</h1>
+          <div class="table-responsive">
+            <table class="table table-bordered no-margin">
+              <tbody>
+                <tr>
+                  <th style="width: 20%;">Nama Penyakit</th>
+                  <td style="width: 30%;"><span id="nama_penyakit"></span></td>
+                  <th style="width: 20%;">Gejala</th>
+                  <td style="width: 30%;"><span id="gejala"></span></td>
+                </tr>
+                <tr>
+                  <th style="width: 20%;">Pengobatan</th>
+                  <td style="width: 30%;"><span id="pengobatan"></span></td>
+                  <th style="width: 20%;">Deskripsi</th>
+                  <td style="width: 30%;"><span id="deskripsi"></span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="row">
+          <h1 class="h5">Data Obat</h1>
+          <div class="table-responsive">
+            <table class="table table-bordered no-margin">
+              <tbody>
+                <tr>
+                  <th style="width: 20%;">Dosis Obat</th>
+                  <td style="width: 30%;"><span id="dosis"></span></td>
+                </tr>
+              </tbody>
+            </table>
           </div>
 
-          <div class="form-group text-center">
-            <div class="btn-group">
-              <button type="submit" class="btn btn-success mr-2" id="form-btn"><?= lang("Simpan") ?></button>
-              <button type="button" class="btn btn-danger" data-bs-dismiss="modal"><?= lang("Batal") ?></button>
-            </div>
+        </div>
+        <div class="row">
+          <div class="col-md-12">
+            <button type="button" class="btn btn-md btn-default float-end" data-bs-dismiss="modal"><?= lang("Kembali") ?></button>
           </div>
-        </form>
+        </div>
       </div>
     </div><!-- /.modal-content -->
   </div><!-- /.modal-dialog -->
@@ -130,6 +157,37 @@
     return submitText;
   }
 
+  function detail(id) {
+    $('#data-modal').modal('show');
+    urlController = '<?= base_url($controller . "/edit") ?>';
+    $.ajax({
+      url: '<?php echo base_url($controller . "/getOne") ?>',
+      type: 'post',
+      data: {
+        id: id
+      },
+      dataType: 'json',
+      success: function(response) {
+        $("#data-modal #no_pendaftaran").text(response.no_pendaftaran);
+        $("#data-modal #nama").text(response.nama);
+        $("#data-modal #umur").text(response.umur + ' Tahun');
+        $("#data-modal #keluhan").text(response.keluhan);
+        $("#data-modal #nama_penyakit").text(response.nama_penyakit);
+        $("#data-modal #gejala").text(response.gejala);
+        $("#data-modal #deskripsi").text(response.deskripsi);
+        $("#data-modal #pengobatan").text(response.pengobatan);
+        $("#data-modal #updated_at").text(response.updated_at);
+        var dosis = '<table class="table no-margin table-bordered table-striped"><tr><th>Nama Obat</th><th>Dosis</th><th>Deskripsi</th></tr>'
+        $.getJSON('<?= site_url($controller . '/obat/') ?>' + response.diagnosis_id, function(data) {
+          $.each(data, function(key, val) {
+            dosis += '<tr><td>' + val.nama_obat + '</td><td>' + val.dosis + '</td><td>' + val.deskripsi + '</td></tr>'
+          })
+          dosis += '</table>'
+          $('#dosis').html(dosis)
+        })
+      }
+    });
+  }
 
   function remove(id) {
     Swal.fire({
