@@ -74,6 +74,52 @@
 </div>
 <!-- /ADD modal content -->
 
+<!-- ADD modal content -->
+<div id="roles-modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-md">
+    <div class="modal-content">
+      <div class="text-center bg-info p-3" id="model-header">
+        <h4 class="modal-title text-white" id="info-header-modalLabel">Pilih menu untuk user</h4>
+      </div>
+      <div class="modal-body">
+        <form id="roles-form" class="pl-3 pr-3">
+          <div class="row">
+            <input type="text" id="id_role" name="id_role" class="form-control" placeholder="Id" required>
+          </div>
+          <div class="row">
+            <table id="roles_table" class="table table-bordered table-striped">
+              <tbody>
+                <tr>
+                  <th>No</th>
+                  <th>Menu</th>
+                  <th></th>
+                </tr>
+                <?php foreach ($menus as $key => $data) : ?>
+                  <tr>
+                    <th><?= $key+1?></th>
+                    <th><?= $data->nama_menu?></th>
+                    <th><input type="checkbox"></th>
+                  </tr>
+                <?php endforeach; ?>
+              </tbody>
+            </table>
+          </div>
+          <div class="row">
+
+            <div class="form-group text-center">
+              <div class="btn-group">
+                <button type="submit" class="btn btn-success mr-2" id="form-btn"><?= lang("Simpan") ?></button>
+                <button type="button" class="btn btn-danger" data-bs-dismiss="modal"><?= lang("Batal") ?></button>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div>
+<!-- /ADD modal content -->
+
 
 
 <?= $this->endSection() ?>

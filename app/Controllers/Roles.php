@@ -5,6 +5,7 @@ namespace App\Controllers;
 
 use App\Controllers\BaseController;
 
+use App\Models\MenuModel;
 use App\Models\RolesModel;
 
 class Roles extends BaseController
@@ -22,9 +23,13 @@ class Roles extends BaseController
 	public function index()
 	{
 
+		$model = new MenuModel();
+		$result = $model->select()->findAll();
+
 		$data = [
 			'controller'    	=> 'roles',
-			'title'     		=> 'roles'
+			'title'     		=> 'roles',
+			'menus'				=> $result
 		];
 
 		return view('roles', $data);
@@ -43,6 +48,7 @@ class Roles extends BaseController
 			$ops .= '<button type="button" class=" btn btn-sm dropdown-toggle btn-info" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">';
 			$ops .= '<i class="fa-solid fa-pen-square"></i>  </button>';
 			$ops .= '<div class="dropdown-menu">';
+			$ops .= '<a class="dropdown-item text-success" onClick="set(' . $value->id . ')"><i class="fa-solid fa-file-signature"></i>   ' .  lang("Set Menu")  . '</a>';
 			$ops .= '<a class="dropdown-item text-info" onClick="save(' . $value->id . ')"><i class="fa-solid fa-pen-to-square"></i>   ' .  lang("Ubah")  . '</a>';
 			$ops .= '<div class="dropdown-divider"></div>';
 			$ops .= '<a class="dropdown-item text-danger" onClick="remove(' . $value->id . ')"><i class="fa-solid fa-trash"></i>   ' .  lang("Hapus")  . '</a>';
@@ -54,6 +60,37 @@ class Roles extends BaseController
 				$value->description,
 
 				$ops
+			);
+		}
+
+		return $this->response->setJSON($data);
+	}
+
+	public function getMenu(){
+		$response = $data['data'] = array();
+
+		$model = new MenuModel();
+		$result = $model->select()->findAll();
+
+		$no = 1;
+		foreach ($result as $key => $value) {
+
+			// $ops = '<div class="btn-group">';
+			// $ops .= '<button type="button" class=" btn btn-sm dropdown-toggle btn-info" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">';
+			// $ops .= '<i class="fa-solid fa-pen-square"></i>  </button>';
+			// $ops .= '<div class="dropdown-menu">';
+			// $ops .= '<a class="dropdown-item text-success" onClick="set(' . $value->id . ')"><i class="fa-solid fa-file-signature"></i>   ' .  lang("Set Menu")  . '</a>';
+			// $ops .= '<a class="dropdown-item text-info" onClick="save(' . $value->id . ')"><i class="fa-solid fa-pen-to-square"></i>   ' .  lang("Ubah")  . '</a>';
+			// $ops .= '<div class="dropdown-divider"></div>';
+			// $ops .= '<a class="dropdown-item text-danger" onClick="remove(' . $value->id . ')"><i class="fa-solid fa-trash"></i>   ' .  lang("Hapus")  . '</a>';
+			// $ops .= '</div></div>';
+
+			$data['data'][$key] = array(
+				$no++,
+				$value->nama_menu,
+				'checkbox',
+
+				// $ops
 			);
 		}
 
