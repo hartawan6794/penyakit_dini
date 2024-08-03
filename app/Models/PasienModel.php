@@ -19,7 +19,6 @@ class PasienModel extends Model {
 	protected $validationMessages = [];
 	protected $skipValidation     = true;    
 
-
     // Menghitung usia
     public function setUmur()
     {

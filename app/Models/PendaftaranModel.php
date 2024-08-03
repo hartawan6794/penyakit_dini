@@ -12,7 +12,7 @@ class PendaftaranModel extends Model
 	protected $primaryKey = 'id';
 	protected $returnType = 'object';
 	protected $useSoftDeletes = false;
-	protected $allowedFields = ['no_pendaftaran', 'pasien_id', 'keluhan_id', 'tanggal_daftar', 'deskripsi', 'id_user', 'created_at', 'updated_at'];
+	protected $allowedFields = ['no_pendaftaran', 'no_rekam_medis', 'pasien_id', 'keluhan_id', 'tanggal_daftar', 'deskripsi', 'id_user', 'created_at', 'updated_at'];
 	protected $useTimestamps = false;
 	protected $createdField  = 'created_at';
 	protected $updatedField  = 'updated_at';

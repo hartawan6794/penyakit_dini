@@ -19,6 +19,10 @@ class Pendaftaran extends Migration
                 'type' => 'VARCHAR',
                 'constraint' => '255',
             ],
+            'no_rekam_medis' => [
+                'type' => 'VARCHAR',
+                'constraint' => '255',
+            ],
             'pasien_id' => [
                 'type' => 'INT',
                 'unsigned' => true,
