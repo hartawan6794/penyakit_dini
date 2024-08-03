@@ -6,30 +6,30 @@ namespace App\Controllers;
 use App\Controllers\BaseController;
 
 use App\Models\MenuModel;
+use App\Models\MenurolesModel;
 use App\Models\RolesModel;
 
 class Roles extends BaseController
 {
 
 	protected $rolesModel;
+	protected $menuModel;
+	protected $menuRolesModel;
 	protected $validation;
 
 	public function __construct()
 	{
 		$this->rolesModel = new RolesModel();
+		$this->menuModel = new MenuModel();
+		$this->menuRolesModel = new MenurolesModel();
 		$this->validation =  \Config\Services::validation();
 	}
 
 	public function index()
 	{
-
-		$model = new MenuModel();
-		$result = $model->select()->findAll();
-
 		$data = [
 			'controller'    	=> 'roles',
 			'title'     		=> 'roles',
-			'menus'				=> $result
 		];
 
 		return view('roles', $data);
@@ -66,29 +66,26 @@ class Roles extends BaseController
 		return $this->response->setJSON($data);
 	}
 
-	public function getMenu(){
+	public function getMenu()
+	{
 		$response = $data['data'] = array();
 
-		$model = new MenuModel();
-		$result = $model->select()->findAll();
-
+		$result = $this->menuModel->select()->findAll();
+		$id_role = $this->request->getPost('id_role');
 		$no = 1;
 		foreach ($result as $key => $value) {
 
-			// $ops = '<div class="btn-group">';
-			// $ops .= '<button type="button" class=" btn btn-sm dropdown-toggle btn-info" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">';
-			// $ops .= '<i class="fa-solid fa-pen-square"></i>  </button>';
-			// $ops .= '<div class="dropdown-menu">';
-			// $ops .= '<a class="dropdown-item text-success" onClick="set(' . $value->id . ')"><i class="fa-solid fa-file-signature"></i>   ' .  lang("Set Menu")  . '</a>';
-			// $ops .= '<a class="dropdown-item text-info" onClick="save(' . $value->id . ')"><i class="fa-solid fa-pen-to-square"></i>   ' .  lang("Ubah")  . '</a>';
-			// $ops .= '<div class="dropdown-divider"></div>';
-			// $ops .= '<a class="dropdown-item text-danger" onClick="remove(' . $value->id . ')"><i class="fa-solid fa-trash"></i>   ' .  lang("Hapus")  . '</a>';
-			// $ops .= '</div></div>';
+			$check = $this->menuRolesModel->checkRoleMenu($value->id, $id_role) ? 'checked' : '';
+			// var_dump($check);
+			$checkbox = '<label class="switch">' .
+				'<input type="checkbox" class="checkbox-menu" name="menu" value="' . $value->id . '" ' . $check . '>' .
+				'<span class="slider round"></span>' .
+				'</label>';
 
 			$data['data'][$key] = array(
 				$no++,
 				$value->nama_menu,
-				'checkbox',
+				$checkbox,
 
 				// $ops
 			);
@@ -208,5 +205,20 @@ class Roles extends BaseController
 		}
 
 		return $this->response->setJSON($response);
+	}
+
+	public function tambahRoleMenu()
+	{
+		$roleId = $this->request->getPost('roleId');
+		$menuId = $this->request->getPost('menuId');
+		$type = $this->request->getPost('type');
+		if ($type == 1) {
+			$this->menuRolesModel->tambahMenu($menuId, $roleId);
+			return $this->response->setJSON(['status' => true, 'message' => 'Berhasil menambahkan menu pada role user']);
+		}
+		if ($type == 0) {
+			$this->menuRolesModel->hapusMenu($menuId, $roleId);
+			return $this->response->setJSON(['status' => true, 'message' => 'Berhasil menghapus menu pada role user']);
+		}
 	}
 }
