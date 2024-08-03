@@ -5,16 +5,21 @@
       use App\Models\MenuModel;
       use App\Models\MenurolesModel;
 
+      // Ambil segmen URL saat ini
       $seg = segment()->getUri()->getSegment(1);
-      $menu = new MenuModel();
-      $roleid = new MenurolesModel();
-      $roleid = $roleid->select('id_menu as id')->where('id_role', session()->get('id_role'))->asArray()->findAll();
-      $roleid = array_map(function ($item) {
-        return $item['id'];
-      }, $roleid);
-      // var_dump($roleid);
-      // die;
-      $menu = $menu->select('content')->whereIn('id', $roleid)->findAll();
+
+      // Ambil role ID dari sesi
+      $roleModel = new MenurolesModel();
+      $menuId = $roleModel->select('id_menu')
+        ->where('id_role', session()->get('id_role'))
+        ->asArray()
+        ->findColumn('id_menu');
+
+      // Ambil menu berdasarkan role ID
+      $menuModel = new MenuModel();
+      $menus = $menuModel->select('content')
+        ->whereIn('id', $menuId)
+        ->findAll();
       // var_dump($menu);die;
       ?>
       <aside class="main-sidebar sidebar-bg-dark  sidebar-color-primary shadow">
@@ -32,11 +37,20 @@
             <!-- Sidebar Menu -->
             <ul class="nav nav-pills nav-sidebar flex-column" data-lte-toggle="treeview" role="menu" data-accordion="false">
               <li class="nav-header ">Menu Aplikasi</li>
-              <?php foreach ($menu as $data) :
-                // Decode HTML entities and evaluate the content
+              <?php
+              $menuItems = [];
+              foreach ($menus as $data) {
+                // Decode HTML entities and tambahkan ke array
                 $content = htmlspecialchars_decode($data->content);
+                $menuItems[] = $content;
+              }
+              // Hapus duplikasi
+              $menuItems = array_unique($menuItems);
+              // Echo menu items
+              foreach ($menuItems as $content) {
                 eval('?>' . $content);
-              endforeach; ?>
+              }
+              ?>
             </ul>
 
 

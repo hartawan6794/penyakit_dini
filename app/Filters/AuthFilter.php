@@ -2,9 +2,13 @@
 
 namespace App\Filters;
 
+use App\Models\MenuModel;
+use App\Models\MenurolesModel;
 use CodeIgniter\Filters\FilterInterface;
 use CodeIgniter\HTTP\RequestInterface;
 use CodeIgniter\HTTP\ResponseInterface;
+
+use function PHPUnit\Framework\isEmpty;
 
 class AuthFilter implements FilterInterface
 {
@@ -25,8 +29,42 @@ class AuthFilter implements FilterInterface
      */
     public function before(RequestInterface $request, $arguments = null)
     {
-        if (!session()->has('logged_in')) {
-        	return redirect()->to(base_url('auth'));
+        // Pastikan helper sudah diload
+        helper('settings'); // Ganti 'your_helper_name' dengan nama helper Anda
+
+        // Gunakan fungsi segment() dari helper
+        $uri = segment()->getUri();
+        $segment = $uri->getSegment(1);
+        if (session()->has('logged_in')) {
+            // Ambil role ID dari sesi
+            $roleModel = new MenurolesModel();
+            $menuId = $roleModel->select('id_menu')
+                ->where('id_role', session()->get('id_role'))
+                ->asArray()
+                ->findColumn('id_menu');
+            if(!isEmpty($menuId)){
+                
+            }
+
+            // Ambil menu berdasarkan role ID
+            $menuModel = new MenuModel();
+            $menus = $menuModel->select('slug')
+                ->whereIn('id', $menuId)->asArray()
+                ->findColumn('slug');
+
+            if (in_array('user', $menus))
+                array_push($menus, 'pasien');
+            if (in_array('diagnosis', $menus))
+                array_push($menus, 'monitoring');
+
+            array_push($menus, '');
+            //  dd($menus);
+            if (!in_array($segment, $menus)) {
+                echo view('unauthorized');
+                exit;
+            }
+        } else {
+            return redirect()->to(base_url('auth'));
         }
     }
 

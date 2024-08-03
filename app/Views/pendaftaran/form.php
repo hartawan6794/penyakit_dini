@@ -33,7 +33,7 @@
       <div class="card-body">
         <form class="form-pendaftaran" class="pl-3 pr-3">
           <div class="row">
-            <input type="text" id="id_pasien" name="id_pasien" class="form-control" placeholder="id_pasien" required>
+            <input type="hidden" id="id_pasien" name="id_pasien" class="form-control" placeholder="id_pasien" required>
             <input type="hidden" id="id" name="id" class="form-control" placeholder="id" required>
           </div>
           <div class="row">
@@ -103,7 +103,13 @@
             <input type="hidden" id="id_keluhan" name="id_keluhan" class="form-control" placeholder="Id_keluhan">
           </div>
           <div class="row">
-            <div class="col-md-12">
+            <div class="col-md-6">
+              <div class="form-group mb-3">
+                <label for="rekam_medis" class="col-form-label">No. Rekam Medis: <span class="text-danger">*</span> </label>
+                <input type="text" id="rekam_medis" name="rekam_medis" class="form-control" dateISO="true" required>
+              </div>
+            </div>
+            <div class="col-md-6">
               <div class="form-group mb-3">
                 <label for="tanggal_keluhan" class="col-form-label"> Tanggal Mulai Keluhan: <span class="text-danger">*</span> </label>
                 <input type="date" id="tanggal_keluhan" name="tanggal_keluhan" class="form-control" dateISO="true" max="<?= date('m-d-Y') ?>" required readonly>
@@ -185,7 +191,7 @@
     tanggalInput.addEventListener('change', function() {
       this.setAttribute('readonly', true);
     });
-    
+
     $('#search-pasien').on('click', function() {
       $('#pasien-modal').modal('show')
       if ($.fn.DataTable.isDataTable('#data_table_pasien')) {

@@ -308,8 +308,6 @@ class User extends BaseController
 		$img_user 	= $this->request->getFile('img_user');
 		$fields['id_user']	= session()->get('user_id');
 
-		// var_dump($img_user);die;
-
 		$data = $this->userModel->select('img_user')->where('id_user', $fields['id_user'])->first();
 
 		// var_dump($data);die;
