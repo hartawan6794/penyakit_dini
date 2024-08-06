@@ -122,7 +122,7 @@
                                     <div class="form-group text-center mt-3">
                                         <div class="">
                                             <button type="button" class="btn btn-info mr-2" id="form-btn"><?= lang("Simpan") ?></button>
-                                            <button type="button" class="btn btn-danger" data-bs-dismiss="modal"><?= lang("Batal") ?></button>
+                                            <a href="/diagnosis" class="btn btn-danger"><?= lang("Batal") ?></a>
                                         </div>
                                     </div>
                                 </div>
@@ -144,15 +144,15 @@
 
     const tanggalInput = document.getElementById('tanggal_diagnosis');
     tanggalInput.addEventListener('click', function() {
-      this.removeAttribute('readonly');
+        this.removeAttribute('readonly');
     });
 
     tanggalInput.addEventListener('blur', function() {
-      this.setAttribute('readonly', true);
+        this.setAttribute('readonly', true);
     });
 
     tanggalInput.addEventListener('change', function() {
-      this.setAttribute('readonly', true);
+        this.setAttribute('readonly', true);
     });
     $(function() {
         $("#pasien_data").select2({
@@ -264,11 +264,12 @@
 
             // Mendapatkan nilai yang dipilih
             var selectedValue = $(this).val();
+            selectedValue = selectedValue.split('-')
             $.ajax({
                 url: '<?php echo base_url($controller . "/getKeluhan") ?>',
                 type: 'post',
                 data: {
-                    pasien_id: selectedValue
+                    pendaftaran_id: selectedValue[0]
                 },
                 dataType: 'json',
                 success: function(response) {

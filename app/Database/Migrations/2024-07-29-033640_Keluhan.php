@@ -14,10 +14,6 @@ class Keluhan extends Migration
                 'unsigned' => true,
                 'auto_increment' => true,
             ],
-            'pasien_id' => [
-                'type' => 'INT',
-                'unsigned' => true,
-            ],
             'keluhan' => [
                 'type' => 'TEXT',
             ],
@@ -35,7 +31,6 @@ class Keluhan extends Migration
         ]);
 
         $this->forge->addKey('id', true);
-        $this->forge->addForeignKey('pasien_id', 'tbl_pasien', 'id', 'CASCADE', 'CASCADE');
         $this->forge->createTable('tbl_keluhan');
     }
 

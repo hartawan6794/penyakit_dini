@@ -18,6 +18,7 @@ class RolesMenuSeeder extends Seeder
             ['id_role' => 1, 'id_menu' => 7],
             ['id_role' => 1, 'id_menu' => 8],
             ['id_role' => 1, 'id_menu' => 9],
+            ['id_role' => 1, 'id_menu' => 10],
         ];
 
         $this->db->table('menu_roles')->insertBatch($data);

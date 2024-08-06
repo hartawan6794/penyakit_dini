@@ -4,13 +4,13 @@
 namespace App\Models;
 use CodeIgniter\Model;
 
-class KeluhanModel extends Model {
+class RiwayatModel extends Model {
     
-	protected $table = 'tbl_keluhan';
+	protected $table = 'tbl_riwayat_pasien';
 	protected $primaryKey = 'id';
 	protected $returnType = 'object';
 	protected $useSoftDeletes = false;
-	protected $allowedFields = ['keluhan', 'tanggal_keluhan'];
+	protected $allowedFields = ['pendaftaran_id', 'pasien_id', 'keluhan_id', 'diagnosis_id'];
 	protected $useTimestamps = false;
 	protected $createdField  = 'created_at';
 	protected $updatedField  = 'updated_at';

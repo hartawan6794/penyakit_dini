@@ -7,6 +7,7 @@ use App\Controllers\BaseController;
 use App\Models\KeluhanModel;
 use App\Models\PasienModel;
 use App\Models\PendaftaranModel;
+use App\Models\RiwayatModel;
 
 class Pendaftaran extends BaseController
 {
@@ -39,7 +40,7 @@ class Pendaftaran extends BaseController
 	{
 		$response = $data['data'] = array();
 
-		$result = $this->pendaftaranModel->select('pendaftaran_pasien.*, u.nama as nama_petugas')->join('tbl_user u','u.id_user = pendaftaran_pasien.id_user','left')->findAll();
+		$result = $this->pendaftaranModel->select('pendaftaran_pasien.*, u.nama as nama_petugas')->join('tbl_user u', 'u.id_user = pendaftaran_pasien.id_user', 'left')->findAll();
 
 		$no = 1;
 		foreach ($result as $key => $value) {
@@ -56,8 +57,9 @@ class Pendaftaran extends BaseController
 			$data['data'][$key] = array(
 				$no++,
 				$value->no_pendaftaran,
-				$this->pasienModel->where('id',$value->pasien_id)->first()->nama,
-				$this->keluhanModel->where('id',$value->keluhan_id)->first()->keluhan,
+				$value->no_rekam_medis,
+				$this->pasienModel->where('id', $value->pasien_id)->first()->nama,
+				$this->keluhanModel->where('id', $value->keluhan_id)->first()->keluhan,
 				$value->tanggal_daftar,
 				$value->deskripsi,
 				$value->nama_petugas,
@@ -72,13 +74,19 @@ class Pendaftaran extends BaseController
 	{
 		$response = $data['data'] = array();
 
-		$result = $this->pasienModel->select('tbl_pasien.*')
-		->join('pendaftaran_pasien tp', 'tp.pasien_id = tbl_pasien.id', 'left')
-		->where('tp.id IS NULL')
-		->findAll();
+		// var_dump(date('Y-m-d'));die;
+		$result = $this->pasienModel->select('tbl_pasien.*, tp.no_rekam_medis, trp.id as riwayat_id')
+			->join('pendaftaran_pasien tp', 'tp.pasien_id = tbl_pasien.id AND tp.tanggal_daftar = CURDATE()', 'left')
+			->join('tbl_riwayat_pasien trp' , 'trp.pendaftaran_id = tp.id','left')
+			->where('tp.id IS NULL')
+			->findAll();
+
+
 		// var_dump($result);die;
 		$no = 1;
 		foreach ($result as $key => $value) {
+		$cekRm = $this->pendaftaranModel->where('pasien_id', $value->id)->orderBy('tanggal_daftar','desc')->first();
+		// var_dump($cekRm);
 			$ops = '<button class="btn btn-block btn-info" id="pilih_pasien"
 			data-id="' . $value->id . '"
 			data-nama="' . $value->nama . '"
@@ -87,8 +95,10 @@ class Pendaftaran extends BaseController
 			data-tgl-lahir = "' . $value->tanggal_lahir . '"
 			data-nama-orang-tua = "' . $value->nama_orang_tua . '"
 			data-umur = "' . $value->umur . '"
-			data-no-telp = "' . $value->no_telepon . '"
-			<i class="fas fa-check"> Select</i>';
+			data-no-telp = "' . $value->no_telepon . '"';
+			$ops .= isset($cekRm) ? 'data-rm = "'.$cekRm->no_rekam_medis.'"' : '';
+			$ops .= isset($cekRm) ? 'data-terakhir-daftar = "'.$cekRm->tanggal_daftar.'"' : '';
+			$ops .='<i class="fas fa-check"> Select</i>';
 
 			$data['data'][$key] = array(
 				$no,
@@ -122,11 +132,15 @@ class Pendaftaran extends BaseController
 		$response = array();
 
 		$id = $this->request->getPost('id');
+		$riwayat = new RiwayatModel();
 
 		if ($this->validation->check($id, 'required|numeric')) {
 
 			$data = $this->pendaftaranModel->where('id', $id)->first();
 
+			$checkInputRm = $riwayat->join('pendaftaran_pasien pp', 'pp.id = tbl_riwayat_pasien.pendaftaran_id')->first();
+			if ($checkInputRm)
+				$data->rm = $checkInputRm->no_rekam_medis;
 			return $this->response->setJSON($data);
 		} else {
 			throw new \CodeIgniter\Exceptions\PageNotFoundException();
@@ -151,7 +165,8 @@ class Pendaftaran extends BaseController
 			'no_telepon' => 'required|string|max_length[15]',
 			'tanggal_keluhan' => 'required|valid_date',
 			'tanggal_lahir' => 'required|valid_date',
-			'umur' => 'required|integer'
+			'umur' => 'required|integer',
+			'no_rekam_medis' => 'required|integer'
 		];
 
 		// Get all POST data
@@ -176,7 +191,8 @@ class Pendaftaran extends BaseController
 				'no_pendaftaran' => $this->pendaftaranModel->no_pendaftaran(),
 				'tanggal_daftar' => date('Y-m-d H:i:s'),
 				'deskripsi' => $fields['deskripsi'],
-				'id_user' => session()->get('user_id')
+				'no_rekam_medis' => $fields['no_rekam_medis'],
+				'id_user' => session()->get('user_id'),
 			];
 
 			if (!empty($fields['id_pasien'])) {
@@ -188,7 +204,7 @@ class Pendaftaran extends BaseController
 					'jenis_kelamin' => $fields['jenis_kelamin'],
 					'alamat' => $fields['alamat'],
 					'nama_orang_tua' => $fields['nama_orang_tua'],
-					'umur'=> $fields['umur'],
+					'umur' => $fields['umur'],
 					'no_telepon' => $fields['no_telepon'],
 					'created_at' => date('Y-m-d H:i:s')
 				];
@@ -201,18 +217,19 @@ class Pendaftaran extends BaseController
 
 			// Save Keluhan
 			$fieldsKeluhan = [
-				'pasien_id' => $fieldsPendaftaran['pasien_id'],
 				'keluhan' => $fields['keluhan'],
 				'tanggal_keluhan' => $fields['tanggal_keluhan'],
 			];
 
-			$this->keluhanModel->insert($fieldsKeluhan);
+			if (!$this->keluhanModel->insert($fieldsKeluhan))
+				$db->transRollback();
 
 			// Get the inserted pendaftaran_id
 			$fieldsPendaftaran['keluhan_id'] = $this->keluhanModel->getInsertID();
-			
+
 			// Save Pendaftaran
-			$this->pendaftaranModel->insert($fieldsPendaftaran);
+			if (!$this->pendaftaranModel->insert($fieldsPendaftaran))
+				$db->transRollback();
 			// Commit Transaction
 			$db->transCommit();
 
@@ -238,7 +255,7 @@ class Pendaftaran extends BaseController
 
 		$fields['id'] = $this->request->getPost('id');
 		// $fields['pasien_id'] = $this->request->getPost('pasien_id');
-		// $fields['keluhan_id'] = $this->request->getPost('keluhan_id');
+		$fields['no_rekam_medis'] = $this->request->getPost('no_rekam_medis');
 		$fields['tanggal_daftar'] = $this->request->getPost('tanggal_daftar');
 		$fields['deskripsi'] = $this->request->getPost('deskripsi');
 
@@ -276,7 +293,7 @@ class Pendaftaran extends BaseController
 
 		$id = $this->request->getPost('id');
 
-		if(!$this->validation->check($id, 'required|numeric')) {
+		if (!$this->validation->check($id, 'required|numeric')) {
 
 			throw new \CodeIgniter\Exceptions\PageNotFoundException();
 		} else {

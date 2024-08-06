@@ -7,18 +7,21 @@ use App\Controllers\BaseController;
 
 use App\Models\MonitoringModel;
 use App\Models\PasienModel;
+use App\Models\PendaftaranModel;
 
 class Monitoring extends BaseController
 {
 
 	protected $monitoringModel;
 	protected $pasienModel;
+	protected $pendaftaranModel;
 	protected $validation;
 
 	public function __construct()
 	{
 		$this->monitoringModel = new MonitoringModel();
 		$this->pasienModel = new PasienModel();
+		$this->pendaftaranModel = new PendaftaranModel();
 		$this->validation =  \Config\Services::validation();
 	}
 
@@ -46,6 +49,7 @@ class Monitoring extends BaseController
 
 			$data['data'][$key] = array(
 				$no++,
+				$this->pendaftaranModel->where('id', $value->pendaftaran_id)->first()->no_pendaftaran,
 				$this->pasienModel->where('id', $value->pasien_id)->first()->nama,
 				$value->nama_obat,
 				$value->dosis,

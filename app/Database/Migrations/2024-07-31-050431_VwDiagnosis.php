@@ -10,10 +10,13 @@ class VwDiagnosis extends Migration
     {
         $this->db->query("
         CREATE OR REPLACE VIEW vw_diagnosis as 
-select td.id as diagnosis_id, no_pendaftaran,tanggal_daftar, p.nama,umur,tk.keluhan,tp.nama_penyakit, tp.gejala, tp.pengobatan,tp.deskripsi, catatan from tbl_diagnosis td inner join pendaftaran_pasien pp on pp.pasien_id = td.pasien_id
-inner join tbl_keluhan tk on tk.id = pp.keluhan_id and tk.pasien_id = pp.pasien_id
-INNER join tbl_pasien p on p.id = pp.pasien_id
-inner join tbl_penyakit tp on tp.id = td.penyakit_id;
+SELECT r.id, pen.no_pendaftaran, pen.no_rekam_medis, pen.tanggal_daftar, p.nama, concat(p.umur ,' Tahun') umur, k.keluhan,
+tp.nama_penyakit, tp.gejala, tp.pengobatan, tp.deskripsi, d.catatan from tbl_riwayat_pasien r 
+inner JOIN pendaftaran_pasien pen ON r.pendaftaran_id = pen.id
+inner JOIN tbl_pasien p ON r.pasien_id = p.id
+INNER JOIN tbl_keluhan k ON k.id = r.keluhan_id
+INNER JOIN tbl_diagnosis d ON d.id = r.diagnosis_id
+LEFT JOIN tbl_penyakit tp ON tp.id = d.penyakit_id ;
                ");
     }
 

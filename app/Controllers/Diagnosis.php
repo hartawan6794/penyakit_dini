@@ -12,6 +12,7 @@ use App\Models\ObatModel;
 use App\Models\PasienModel;
 use App\Models\PendaftaranModel;
 use App\Models\PenyakitModel;
+use App\Models\RiwayatModel;
 use App\Models\UserModel;
 
 class Diagnosis extends BaseController
@@ -23,6 +24,7 @@ class Diagnosis extends BaseController
 	protected $pasienModel;
 	protected $keluhanModel;
 	protected $penyakitModel;
+	protected $riwayatModel;
 	protected $obatModel;
 	protected $userModel;
 	protected $validation;
@@ -37,6 +39,7 @@ class Diagnosis extends BaseController
 		$this->penyakitModel = new PenyakitModel();
 		$this->obatModel = new ObatModel();
 		$this->userModel = new UserModel();
+		$this->riwayatModel = new RiwayatModel();
 		$this->diagnosisObat = new DiagnosisObatModel();
 		$this->db = \Config\Database::connect();
 		$this->validation =  \Config\Services::validation();
@@ -56,10 +59,10 @@ class Diagnosis extends BaseController
 	{
 
 		// Ambil semua pendaftaran pasien untuk hari ini
-		$pendaftaran = $this->pendaftaranModel->select('p.id, p.nama, pendaftaran_pasien.no_pendaftaran')
+		$pendaftaran = $this->pendaftaranModel->select('p.id pasien_id,pendaftaran_pasien.id, p.nama, pendaftaran_pasien.no_pendaftaran')
 			->join('tbl_pasien p', 'p.id = pendaftaran_pasien.pasien_id')
-			->join('tbl_diagnosis dg', 'dg.pasien_id = p.id', 'left')
-			->where('tanggal_daftar', date('Y-m-d'))
+			->join('tbl_diagnosis dg', 'dg.pasien_id = p.id and dg.pendaftaran_id = pendaftaran_pasien.id', 'left')
+			// ->where('tanggal_daftar', date('Y-m-d'))
 			->where('dg.id IS NULL')
 			->findAll();
 
@@ -70,7 +73,7 @@ class Diagnosis extends BaseController
 		if (count($pendaftaran) > 0) {
 			$filteredPasienData = array_map(function ($item) {
 				return [
-					'pasien_id' => $item->id,
+					'pasien_id' => $item->id . '-' . $item->pasien_id,
 					'nama_pasien' => $item->no_pendaftaran . ' - ' . $item->nama,
 				];
 			}, $pendaftaran);
@@ -90,8 +93,8 @@ class Diagnosis extends BaseController
 	}
 	public function getKeluhan()
 	{
-		$pasien_id = $this->request->getPost('pasien_id');
-		return $this->response->setJson(['keluhan' => $this->keluhanModel->where('pasien_id', $pasien_id)->first()->keluhan]);
+		$pendaftaran_id = $this->request->getPost('pendaftaran_id');
+		return $this->response->setJson(['keluhan' => $this->pendaftaranModel->join('tbl_keluhan tk','tk.id = pendaftaran_pasien.keluhan_id')->where('pendaftaran_pasien.id', $pendaftaran_id)->first()->keluhan]);
 	}
 
 	public function getAll()
@@ -117,7 +120,7 @@ class Diagnosis extends BaseController
 				$no++,
 				$this->pasienModel->where('id', $value->pasien_id)->first()->nama,
 				$this->penyakitModel->where('id', $value->penyakit_id)->first()->nama_penyakit,
-				// $value->penyakit_id,
+				$this->pendaftaranModel->where('id', $value->pendaftaran_id)->first()->tanggal_daftar,
 				$value->tanggal_diagnosis,
 				$value->catatan,
 				$this->userModel->where('id_user', $value->id_user)->first()->nama,
@@ -152,7 +155,7 @@ class Diagnosis extends BaseController
 		// Set rules untuk validation
 		$rules = [
 			'id_diagnosis' => 'permit_empty|is_natural',
-			'pasien_data' => 'required|is_natural_no_zero',
+			'pasien_data' => 'required',
 			'keluhan' => 'required|string',
 			'penyakit_data' => 'required|is_natural_no_zero',
 			'tanggal_diagnosis' => 'required|valid_date',
@@ -165,7 +168,6 @@ class Diagnosis extends BaseController
 
 		// mengambil semua request
 		$fields = $this->request->getPost();
-
 		// Validate data
 		if (!$this->validate($rules)) {
 			// jika validation gagal
@@ -177,14 +179,16 @@ class Diagnosis extends BaseController
 		}
 
 		$obat = $this->request->getPost('pilih_obat');
-
 		$this->db->transStart();
 
 		try {
-
+			// Extract ID from the field
+			$id = explode('-', $fields['pasien_data']);
+			// ID pendaftaran $id[0], ID pasien $id[1]
 			$fieldsDiagnosis = [
 				'id' => $this->request->getPost('id_diagnosis'),
-				'pasien_id' => $this->request->getPost('pasien_data'),
+				'pendaftaran_id' => $id[0],
+				'pasien_id' => $id[1],
 				'penyakit_id' => $this->request->getPost('penyakit_data'),
 				'tanggal_diagnosis' => $this->request->getPost('tanggal_diagnosis'),
 				'catatan' => $this->request->getPost('catatan'),
@@ -192,35 +196,66 @@ class Diagnosis extends BaseController
 				'id_user' => session()->get('user_id')
 			];
 
-			$this->diagnosisModel->insert($fieldsDiagnosis);
-
-			$obatData = array_map(function ($item) {
+			// var_dump($fieldsDiagnosis);die;
+		
+			// Insert diagnosis data
+			if (!$this->diagnosisModel->insert($fieldsDiagnosis)) {
+				throw new \Exception('Failed to insert diagnosis data');
+			}
+		
+			// Get the last inserted ID
+			$diagnosisID = $this->diagnosisModel->getInsertID();
+		
+			// Prepare data for diagnosis_obat
+			$obatData = array_map(function ($item) use ($diagnosisID) {
 				return [
-					// 'id'	=> '',
 					'obat_id' => $item,
-					'diagnosis_id' => $this->diagnosisModel->getInsertID(),
+					'diagnosis_id' => $diagnosisID,
 					'created_at' => date('Y-m-d H:i:s')
 				];
 			}, $obat);
-
-			// Save Pendaftaran
-			$this->diagnosisObat->insertBatch($obatData);
-
+		
+			// Insert obat data
+			if (!$this->diagnosisObat->insertBatch($obatData)) {
+				throw new \Exception('Failed to insert diagnosis_obat data');
+			}
+		
+			// Prepare data for riwayat
+			$fieldsRiwayat = [
+				'pendaftaran_id' => $id[0],
+				'pasien_id' => $id[1],
+				'keluhan_id' => $this->pendaftaranModel->where('id', $id[0])->first()->keluhan_id,
+				'diagnosis_id' => $diagnosisID,
+				'created_at' => date('Y-m-d H:i:s')
+			];
+		
+			// Insert riwayat data
+			if (!$this->riwayatModel->insert($fieldsRiwayat)) {
+				throw new \Exception('Failed to insert riwayat data');
+			}
+		
+			// Commit transaction
 			$this->db->transCommit();
-
+		
+			// Prepare success response
 			$response = [
 				'success' => true,
 				'messages' => 'Berhasil menyimpan data'
 			];
 		} catch (\Exception $e) {
+			// Rollback transaction
 			$this->db->transRollback();
+		
+			// Prepare error response
 			$response = [
 				'success' => false,
 				'messages' => 'Data gagal disimpan: ' . $e->getMessage()
 			];
 		}
-
+		
+		// Return response as JSON
 		return $this->response->setJSON($response);
+		
 	}
 	public function edit($id_diagnosis)
 	{
@@ -231,14 +266,16 @@ class Diagnosis extends BaseController
 			'title'     		=> 'Form Ubah Diagnosis Pasien',
 		];
 		$data['diagnosis'] = $this->diagnosisModel->find($id_diagnosis);
+		// var_dump($data);die;
 
-		$pendaftaran = $this->pendaftaranModel->where('tanggal_daftar', date('Y-m-d'))->findAll();
+		$pendaftaran = $this->pendaftaranModel->where('id', $data['diagnosis']->pendaftaran_id)->findAll();
 		$pasienData = array_map(function ($item) {
 			return [
-				'id' => $item->pasien_id,
+				'id' => $item->id .'-'.$item->pasien_id,
 				'nama' => $this->pasienModel->where('id', $item->pasien_id)->first()->nama,
 			];
 		}, $pendaftaran);
+
 
 		$data['pasien'] = $pasienData;
 		$data['penyakit'] = $this->penyakitModel->findAll();
@@ -247,6 +284,7 @@ class Diagnosis extends BaseController
 		$data['diagnosisObat'] = $this->diagnosisObat->where('diagnosis_id', $id_diagnosis)->findAll();
 		$data['selectedObatIds'] = array_column($data['diagnosisObat'], 'obat_id');
 
+		// var_dump($data['pasien']);die;
 
 		// dd($data);
 		return view('diagnosis/edit', $data);
@@ -257,7 +295,7 @@ class Diagnosis extends BaseController
 		$response = array();
 		$rules = [
 			'id_diagnosis' => 'permit_empty|is_natural',
-			'pasien_data' => 'required|is_natural_no_zero',
+			// 'pasien_data' => 'required|is_natural_no_zero',
 			'keluhan' => 'required|string',
 			'penyakit_data' => 'required|is_natural_no_zero',
 			'tanggal_diagnosis' => 'required|valid_date',
@@ -285,7 +323,7 @@ class Diagnosis extends BaseController
 
 			$fieldsDiagnosis = [
 				'id' => $this->request->getPost('id_diagnosis'),
-				'pasien_id' => $this->request->getPost('pasien_data'),
+				// 'pasien_id' => $this->request->getPost('pasien_data'),
 				'penyakit_id' => $this->request->getPost('penyakit_data'),
 				'tanggal_diagnosis' => $this->request->getPost('tanggal_diagnosis'),
 				'catatan' => $this->request->getPost('catatan'),
@@ -354,14 +392,12 @@ class Diagnosis extends BaseController
 		return $this->response->setJSON($response);
 	}
 
-	public function obat($id = null){
+	public function obat($id = null)
+	{
 		$response = array();
 
-		$detail = $this->diagnosisObat->select('to.*')->join('tbl_obat to','to.id = diagnosis_obat.obat_id')->where('diagnosis_obat.diagnosis_id', $id)->findAll();
+		$detail = $this->diagnosisObat->select('to.*')->join('tbl_obat to', 'to.id = diagnosis_obat.obat_id')->where('diagnosis_obat.diagnosis_id', $id)->findAll();
 		// var_dump($detail);die;
 		return $this->response->setJSON($detail);
-
 	}
-
-	
 }

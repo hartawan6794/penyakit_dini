@@ -28,6 +28,7 @@ class Roles extends Migration
         ]);
         $this->forge->addKey('id', true);
         $this->forge->createTable('roles');
+
     }
 
     public function down()

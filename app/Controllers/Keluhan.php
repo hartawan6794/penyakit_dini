@@ -7,18 +7,21 @@ use App\Controllers\BaseController;
 
 use App\Models\KeluhanModel;
 use App\Models\PasienModel;
+use App\Models\PendaftaranModel;
 
 class Keluhan extends BaseController
 {
 
 	protected $keluhanModel;
 	protected $pasienModel;
+	protected $pendaftaranModel;
 	protected $validation;
 
 	public function __construct()
 	{
 		$this->keluhanModel = new KeluhanModel();
 		$this->pasienModel = new PasienModel();
+		$this->pendaftaranModel = new PendaftaranModel();
 		$this->validation =  \Config\Services::validation();
 	}
 
@@ -37,7 +40,7 @@ class Keluhan extends BaseController
 	{
 		$response = $data['data'] = array();
 
-		$result = $this->keluhanModel->select()->findAll();
+		$result = $this->pendaftaranModel->select('pasien_id,tk.*')->join('tbl_keluhan tk','tk.id = pendaftaran_pasien.keluhan_id','left')->findAll();
 
 		$no = 1;
 		foreach ($result as $key => $value) {
@@ -47,8 +50,8 @@ class Keluhan extends BaseController
 			$ops .= '<i class="fa-solid fa-pen-square"></i>  </button>';
 			$ops .= '<div class="dropdown-menu">';
 			$ops .= '<a class="dropdown-item text-info" onClick="save(' . $value->id . ')"><i class="fa-solid fa-pen-to-square"></i>   ' .  lang("Ubah")  . '</a>';
-			$ops .= '<div class="dropdown-divider"></div>';
-			$ops .= '<a class="dropdown-item text-danger" onClick="remove(' . $value->id . ')"><i class="fa-solid fa-trash"></i>   ' .  lang("Hapus")  . '</a>';
+			// $ops .= '<div class="dropdown-divider"></div>';
+			// $ops .= '<a class="dropdown-item text-danger" onClick="remove(' . $value->id . ')"><i class="fa-solid fa-trash"></i>   ' .  lang("Hapus")  . '</a>';
 			$ops .= '</div></div>';
 
 			$data['data'][$key] = array(

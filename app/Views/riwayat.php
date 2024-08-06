@@ -7,10 +7,7 @@
   <div class="card-header">
     <div class="row">
       <div class="col-9 mt-2">
-        <h3 class="card-title">Keluhan Pasien</h3>
-      </div>
-      <div class="col-3">
-        <!-- <button type="button" class="btn float-end btn-success" onclick="save()" title="<?= lang("Tambah") ?>"> <i class="fa fa-plus"></i> <?= lang('Tambah') ?></button> -->
+        <h3 class="card-title">Riwayat Pasien</h3>
       </div>
     </div>
   </div>
@@ -20,11 +17,13 @@
       <thead>
         <tr>
           <th>No</th>
-          <th>Pasien id</th>
-          <th>Keluhan</th>
-          <th>Tanggal keluhan</th>
-
-          <th></th>
+          <th>No. Rekam Medis</th>
+          <th>Nama Pasien</th>
+          <th>Keluah</th>
+          <th>Catatan Diagnosis</th>
+          <th>Penyakit</th>
+          <th>Diagnosis Terakhir</th>
+          <th>Pendaftaran Terakhir</th>
         </tr>
       </thead>
     </table>
@@ -50,14 +49,26 @@
           <div class="row">
             <div class="col-md-12">
               <div class="form-group mb-3">
-                <label for="keluhan" class="col-form-label"> Keluhan: <span class="text-danger">*</span> </label>
-                <textarea cols="40" rows="5" id="keluhan" name="keluhan" class="form-control" placeholder="Keluhan" minlength="0" required></textarea>
+                <label for="pendaftaran_id" class="col-form-label"> Pendaftaran id: <span class="text-danger">*</span> </label>
+                <input type="number" id="pendaftaran_id" name="pendaftaran_id" class="form-control" placeholder="Pendaftaran id" minlength="0" required>
               </div>
             </div>
             <div class="col-md-12">
               <div class="form-group mb-3">
-                <label for="tanggal_keluhan" class="col-form-label"> Tanggal keluhan: <span class="text-danger">*</span> </label>
-                <input type="date" id="tanggal_keluhan" name="tanggal_keluhan" class="form-control" dateISO="true" required>
+                <label for="pasien_id" class="col-form-label"> Pasien id: <span class="text-danger">*</span> </label>
+                <input type="number" id="pasien_id" name="pasien_id" class="form-control" placeholder="Pasien id" minlength="0" required>
+              </div>
+            </div>
+            <div class="col-md-12">
+              <div class="form-group mb-3">
+                <label for="keluhan_id" class="col-form-label"> Keluhan id: <span class="text-danger">*</span> </label>
+                <input type="number" id="keluhan_id" name="keluhan_id" class="form-control" placeholder="Keluhan id" minlength="0" required>
+              </div>
+            </div>
+            <div class="col-md-12">
+              <div class="form-group mb-3">
+                <label for="diagnosis_id" class="col-form-label"> Diagnosis id: <span class="text-danger">*</span> </label>
+                <input type="number" id="diagnosis_id" name="diagnosis_id" class="form-control" placeholder="Diagnosis id" minlength="0" required>
               </div>
             </div>
           </div>
@@ -145,9 +156,10 @@
           $('#data-modal').modal('show');
           //insert data to form
           $("#data-form #id").val(response.id);
+          $("#data-form #pendaftaran_id").val(response.pendaftaran_id);
           $("#data-form #pasien_id").val(response.pasien_id);
-          $("#data-form #keluhan").val(response.keluhan);
-          $("#data-form #tanggal_keluhan").val(response.tanggal_keluhan);
+          $("#data-form #keluhan_id").val(response.keluhan_id);
+          $("#data-form #diagnosis_id").val(response.diagnosis_id);
 
         }
       });

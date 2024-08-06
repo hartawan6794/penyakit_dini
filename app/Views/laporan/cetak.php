@@ -66,6 +66,7 @@
     <tr bgcolor="#00CC66" align="center">
       <th>No</th>
       <th>No Pendaftaran</th>
+      <th>No RM</th>
       <th>Nama</th>
       <th>Umur</th>
       <th>Keluhan</th>
@@ -80,13 +81,13 @@
     <tr align="center">
       <td><?= $no++ ?></td>
       <td><?= $d->no_pendaftaran ?></td>
+      <td><?= $d->no_rekam_medis ?></td>
       <td><?= $d->nama ?></td>
       <td><?= $d->umur ?></td>
       <td><?= $d->keluhan ?></td>
       <td><?= $d->nama_penyakit ?></td>
       <td><?= $d->catatan?></td>
       <td><?= $d->tanggal_daftar?></td>
-      
     </tr>
   <?php endforeach; ?>
 </table>
