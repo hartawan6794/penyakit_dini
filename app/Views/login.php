@@ -74,7 +74,7 @@
                 </div>
 
                 <div class="form-group mb-3 form-check">
-                    <input type="checkbox" name="rememberMe" id="rememberMe" class="form-check-input">
+                    <input type="checkbox" name="remember_me" id="remember_me" class="form-check-input">
                     <label class="form-check-label">Remember Me</label>
                 </div>
 
@@ -91,6 +91,7 @@
         $('#login-button').on('click', function() {
             var username = $('#username').val();
             var password = $('#password').val();
+            var remember_me = $('#remember_me').is(':checked');
 
             $.ajax({
                 url: '<?= base_url('auth/login') ?>',
@@ -98,6 +99,7 @@
                 data: {
                     username: username,
                     password: password,
+                    remember_me: remember_me,
                 },
                 success: function(response) {
                     if (response.status == 'success') {

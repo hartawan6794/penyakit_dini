@@ -44,18 +44,18 @@ class Home extends BaseController
 
             $pasien = $this->pasienModel->where('id', $value->pasien_id)->first();
             $keluhan = $this->keluhanModel->where('id', $value->keluhan_id)->first();
-    
+
             $namaPasien = htmlspecialchars($pasien->nama);
             $umurPasien = htmlspecialchars($pasien->umur) . ' Tahun';
             $keluhanPasien = htmlspecialchars($keluhan->keluhan);
             $tanggalDaftar = htmlspecialchars($value->tanggal_daftar);
-    
+
             if ($value->tanggal_diagnosis == null) {
-                $statusDiagnosis = '<span style="color: rgba(255, 99, 132, 1);">Belum diagnosis</span>';
+                $statusDiagnosis = '<span class="badge bg-danger">Belum diagnosis</span>';
             } else {
-                $statusDiagnosis = '<span style="color: rgba(75, 192, 192, 1);">Sudah diagnosis</span>';
+                $statusDiagnosis = '<span class="badge bg-success">Sudah diagnosis</span>';
             }
-    
+
             $data['data'][$key] = array(
                 $no++,
                 $namaPasien,

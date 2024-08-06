@@ -4,6 +4,7 @@ namespace App\Filters;
 
 use App\Models\MenuModel;
 use App\Models\MenurolesModel;
+use App\Models\UserModel;
 use CodeIgniter\Filters\FilterInterface;
 use CodeIgniter\HTTP\RequestInterface;
 use CodeIgniter\HTTP\ResponseInterface;
@@ -42,8 +43,7 @@ class AuthFilter implements FilterInterface
                 ->where('id_role', session()->get('id_role'))
                 ->asArray()
                 ->findColumn('id_menu');
-            if(!isEmpty($menuId)){
-                
+            if (!isEmpty($menuId)) {
             }
 
             // Ambil menu berdasarkan role ID
@@ -64,6 +64,25 @@ class AuthFilter implements FilterInterface
                 exit;
             }
         } else {
+            // Periksa cookie "Remember Me"
+            if (isset($_COOKIE['remember_me'])) {
+                $token = $_COOKIE['remember_me'];
+                $userModel = new UserModel();
+                $user = $userModel->where('remember_token', $token)->first();
+
+                if ($user) {
+                    // Simpan session user
+                    session()->set([
+                        'user_id' => $user->id_user,
+                        'username' => $user->username,
+                        'nama' => $user->nama,
+                        'id_role' => $user->id_role,
+                        'img_user' => $user->img_user,
+                        'logged_in' => true
+                    ]);
+                    return;
+                }
+            }
             return redirect()->to(base_url('auth'));
         }
     }
