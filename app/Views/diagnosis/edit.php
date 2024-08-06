@@ -45,7 +45,8 @@
                                         <select name="pasien_data" id="pasien_data" class="form-control" disabled>
                                             <option value="">Pilih Pasien</option>
                                             <?php foreach ($pasien as $value) : ?>
-                                                <option value="<?= $value['id'] ?>" <?= $diagnosis->pasien_id == $value['id'] ? 'selected' : '' ?>><?= $value['nama'] ?></option>
+                                                <?php $valueEx = explode('-', $value['id']) ?>
+                                                <option value="<?= $value['id']  ?>" <?= $diagnosis->pasien_id == $valueEx[1] ? 'selected' : '' ?>><?= $value['nama'] ?></option>
                                             <?php endforeach ?>
                                         </select>
                                     </div>
@@ -120,7 +121,7 @@
                                     <div class="form-group text-center mt-3">
                                         <div class="">
                                             <button type="button" class="btn btn-info mr-2" id="form-btn"><?= lang("Simpan") ?></button>
-                                            <button type="button" class="btn btn-danger" data-bs-dismiss="modal"><?= lang("Batal") ?></button>
+                                            <a href="/diagnosis" class="btn btn-danger"><?= lang("Batal") ?></a>
                                         </div>
                                     </div>
                                 </div>
@@ -194,7 +195,6 @@
                 });
             });
 
-             console.log(formData)
             $(".text-danger").remove();
             $.ajax({
                 url: '<?= base_url($controller . "/update") ?>',
@@ -245,11 +245,14 @@
 
         function onUpdateKeluhan() {
             var selectedValue = $("#pasien_data").val();
+            console.log(selectedValue)
+            selectedValue = selectedValue.split('-')
+            console.log(selectedValue)
             $.ajax({
                 url: '<?php echo base_url($controller . "/getKeluhan") ?>',
                 type: 'post',
                 data: {
-                    pasien_id: selectedValue
+                    pendaftaran_id: selectedValue[0]
                 },
                 dataType: 'json',
                 success: function(response) {

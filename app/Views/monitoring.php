@@ -20,6 +20,7 @@
       <thead>
         <tr>
           <th>No</th>
+          <th>No Pendaftaran</th>
           <th>Nama Pasien</th>
           <th>Nama Obat</th>
           <th>Dosis</th>

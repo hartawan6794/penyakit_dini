@@ -22,6 +22,7 @@
           <th>No</th>
           <th>Nama Pasien</th>
           <th>Nama Penyakit</th>
+          <th>Tanggal Pendaftaran</th>
           <th>Tanggal diagnosis</th>
           <th>Catatan</th>
           <th>Petugas</th>

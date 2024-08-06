@@ -51,51 +51,68 @@ $masterModel = new MasterModel();
     <div class="card card-same-height">
       <div class="card-header">
         <h1 class="h4 mb-3 font-weight-normal">Selamat Datang <?= session()->get('nama') ?></h1>
-        <div class="text-center mb-4">
+        <div class="text-center mb-3">
           <img src="<?= base_url('asset/img/logo-dashboard.png'); ?>" alt="Logo" class="mb-3">
         </div>
       </div>
       <div class="card-body">
         <div class="row">
-          <div class="col-md-6">
-            <div class="small-box bg-success">
-              <div class="inner">
-                <p>Users</p>
-                <h3><?= $masterModel->countData('tbl_user') ?></h3>
+          <div class="col-12 col-sm-12 col-md-6">
+            <div class="info-box">
+              <span class="info-box-icon bg-warning elevation-1">
+                <div class="icon">
+                  <i class="fa fa-users-line"></i>
+                </div>
+              </span>
+              <div class="info-box-content">
+                <span class="info-box-text">Pasien</span>
+                <span class="info-box-number">
+                  <h3><?= $masterModel->countData('tbl_pasien') ?></h3>
+                </span>
               </div>
-              <div class="icon">
-                <i class="fa fa-users"></i>
-              </div>
-              <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
             </div>
           </div>
-          <div class="col-md-6">
-            <div class="small-box bg-warning">
-              <div class="inner">
-                <p>Pasien</p>
-                <h3><?= $masterModel->countData('tbl_pasien') ?></h3>
+          <div class="col-12 col-sm-12 col-md-6">
+            <div class="info-box">
+              <span class="info-box-icon bg-danger elevation-1">
+                <i class="fa-solid fa-hospital-user"></i></span>
+              <div class="info-box-content">
+                <span class="info-box-text">Pendaftaran</span>
+                <span class="info-box-number">
+                  <h3><?= $masterModel->countData('pendaftaran_pasien') ?></h3>
+                </span>
               </div>
-              <div class="icon">
-                <i class="fa fa-users-line"></i>
-              </div>
-              <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
             </div>
           </div>
         </div>
         <div class="row">
-          <div class="col-md-6">
-            <div class="small-box bg-danger">
-              <div class="inner">
-                <p>Pendaftaran</p>
-                <h3><?= $masterModel->countData('pendaftaran_pasien') ?></h3>
+          <div class="col-12 col-sm-12 col-md-6">
+            <div class="info-box">
+              <span class="info-box-icon bg-success elevation-1">
+                <i class="fa-solid fa-user-nurse"></i></span>
+              <div class="info-box-content">
+                <span class="info-box-text">Users</span>
+                <span class="info-box-number">
+                  <h3><?= $masterModel->countData('tbl_user') ?></h3>
+                </span>
               </div>
-              <div class="icon">
-                <!-- <i class="fa-solid fa-user-injured"></i> -->
-                <i class="fa-solid fa-hospital-user"></i>
-              </div>
-              <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
             </div>
           </div>
+          <div class="col-12 col-sm-12 col-md-6">
+            <div class="info-box">
+              <span class="info-box-icon bg-info elevation-1">
+                <i class="fa-solid fa-pills"></i></span>
+              <div class="info-box-content">
+                <span class="info-box-text">Data Obat</span>
+                <span class="info-box-number">
+                  <h3><?= $masterModel->countData('tbl_obat') ?></h3>
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- <div class="row">
+
           <div class="col-md-6">
             <div class="small-box bg-info">
               <div class="inner">
@@ -108,7 +125,7 @@ $masterModel = new MasterModel();
               <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
             </div>
           </div>
-        </div>
+        </div> -->
       </div>
     </div>
   </div>

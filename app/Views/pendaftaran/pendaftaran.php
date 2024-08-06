@@ -21,6 +21,7 @@
         <tr>
           <th>No</th>
           <th>No Pendaftaran</th>
+          <th>No Rekam Medis</th>
           <th>Nama Pasien</th>
           <th>Keluhan Pasien</th>
           <th>Tanggal daftar</th>
@@ -52,6 +53,12 @@
           </div>
           <div class="row">
 
+            <div class="col-md-12">
+              <div class="form-group mb-3">
+                <label for="no_rekam_medis" class="col-form-label"> No. Rekam Medis daftar: <span class="text-danger">*</span> </label>
+                <input type="input" id="no_rekam_medis" name="no_rekam_medis" class="form-control" required>
+              </div>
+            </div>
             <div class="col-md-12">
               <div class="form-group mb-3">
                 <label for="tanggal_daftar" class="col-form-label"> Tanggal daftar: <span class="text-danger">*</span> </label>
@@ -109,7 +116,7 @@
       }
     });
 
-    $('#create-pendaftaran').on('click', function(e){
+    $('#create-pendaftaran').on('click', function(e) {
       e.preventDefault();
       window.location.href = '<?= base_url($controller . "/create") ?>'
     })
@@ -155,7 +162,9 @@
           //insert data to form
           $("#data-form #id").val(response.id);
           $("#data-form #pasien_id").val(response.pasien_id);
-          $("#data-form #keluhan_id").val(response.keluhan_id);
+          $("#data-form #no_rekam_medis").val(response.no_rekam_medis);
+          if (response.rm !== null || response.rm !== '')
+            $("#data-form #no_rekam_medis").prop('disabled',true);
           $("#data-form #tanggal_daftar").val(response.tanggal_daftar);
           $("#data-form #deskripsi").val(response.deskripsi);
 

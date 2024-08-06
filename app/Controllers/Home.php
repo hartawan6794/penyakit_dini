@@ -42,13 +42,27 @@ class Home extends BaseController
         foreach ($result as $key => $value) {
 
 
+            $pasien = $this->pasienModel->where('id', $value->pasien_id)->first();
+            $keluhan = $this->keluhanModel->where('id', $value->keluhan_id)->first();
+    
+            $namaPasien = htmlspecialchars($pasien->nama);
+            $umurPasien = htmlspecialchars($pasien->umur) . ' Tahun';
+            $keluhanPasien = htmlspecialchars($keluhan->keluhan);
+            $tanggalDaftar = htmlspecialchars($value->tanggal_daftar);
+    
+            if ($value->tanggal_diagnosis == null) {
+                $statusDiagnosis = '<span style="color: rgba(255, 99, 132, 1);">Belum diagnosis</span>';
+            } else {
+                $statusDiagnosis = '<span style="color: rgba(75, 192, 192, 1);">Sudah diagnosis</span>';
+            }
+    
             $data['data'][$key] = array(
                 $no++,
-                $this->pasienModel->where('id', $value->pasien_id)->first()->nama,
-                $this->pasienModel->where('id', $value->pasien_id)->first()->umur . ' Tahun',
-                $this->keluhanModel->where('id', $value->keluhan_id)->first()->keluhan,
-                $value->tanggal_daftar,
-                $value->tanggal_diagnosis == null ? 'Belum diagnosis' : 'Sudah diagnosis',
+                $namaPasien,
+                $umurPasien,
+                $keluhanPasien,
+                $tanggalDaftar,
+                $statusDiagnosis,
                 // $value->nama_petugas,
             );
         }

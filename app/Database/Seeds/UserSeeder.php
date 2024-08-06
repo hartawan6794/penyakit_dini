@@ -9,6 +9,7 @@ class UserSeeder extends Seeder
     public function run()
     {
         $data = [
+            'id_user' => 1,
             'username' => 'admin',
             'password' => password_hash('admin123', PASSWORD_DEFAULT),
             'nama' => 'Admin',

@@ -10,7 +10,7 @@ class DiagnosisModel extends Model {
 	protected $primaryKey = 'id';
 	protected $returnType = 'object';
 	protected $useSoftDeletes = false;
-	protected $allowedFields = ['pasien_id', 'penyakit_id', 'tanggal_diagnosis', 'catatan', 'id_user'];
+	protected $allowedFields = ['pendaftaran_id','pasien_id', 'penyakit_id', 'tanggal_diagnosis', 'catatan', 'id_user'];
 	protected $useTimestamps = false;
 	protected $createdField  = 'created_at';
 	protected $updatedField  = 'updated_at';

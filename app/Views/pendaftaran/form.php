@@ -9,6 +9,10 @@
     background-color: #198754 !important;
     color: white !important;
   }
+
+  /* #keterangan{
+    display: none;
+  } */
 </style>
 <div class="row">
   <div class="col-md-12">
@@ -49,7 +53,7 @@
             <div class="col-md-6">
               <div class="form-group mb-3">
                 <label for="umur" class="col-form-label"> Usia: <span class="text-danger">*</span> </label>
-                <input type="text" id="umur" name="umur" class="form-control" dateISO="true" required>
+                <input type="text" id="umur" name="umur" class="form-control" placeholder="Usia" required>
               </div>
             </div>
             <div class="col-md-6">
@@ -105,8 +109,9 @@
           <div class="row">
             <div class="col-md-6">
               <div class="form-group mb-3">
-                <label for="rekam_medis" class="col-form-label">No. Rekam Medis: <span class="text-danger">*</span> </label>
-                <input type="text" id="rekam_medis" name="rekam_medis" class="form-control" dateISO="true" required>
+                <label for="no_rekam_medis" class="col-form-label">No. Rekam Medis: <span class="text-danger">*</span> </label>
+                <input type="text" id="no_rekam_medis" name="no_rekam_medis" class="form-control" required placeholder="No Rekam Medis">
+                <p id="keterangan_rm" style="font-size: 14px;" class="text-danger"></p>
               </div>
             </div>
             <div class="col-md-6">
@@ -302,6 +307,18 @@
     $('#nama_orang_tua').val($(this).data('nama-orang-tua'))
     $('#no_telepon').val($(this).data('no-telp'))
     $('#umur').val($(this).data('umur'))
+    if ($(this).data('rm') === '' || typeof $(this).data('rm') === 'undefined') {
+      $('#no_rekam_medis').prop('disabled', false);
+      $('#no_rekam_medis').val('');
+      $('#keterangan_rm').hide()
+    } else {
+      $('#no_rekam_medis').val($(this).data('rm'))
+      $('#keterangan_rm').text('Pendaftaran terakhir pada tanggal '+$(this).data('terakhir-daftar'))
+      $('#no_rekam_medis').prop('disabled', true);
+      $('#keterangan_rm').show()
+    }
+
+    console.log($(this).data('terakhir-daftar'))
   });
 </script>
 <?= $this->endSection() ?>
