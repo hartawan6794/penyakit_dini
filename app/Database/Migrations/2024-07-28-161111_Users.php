@@ -43,6 +43,11 @@ class Users extends Migration
                 'constraint' => '255',
                 'null' => true
             ],
+            'remember_token' => [
+                'type' => 'VARCHAR',
+                'constraint' => '255',
+                'null' => true
+            ],
             'id_role' => [
                 'type' => 'INT',
                 'constraint' => 11
