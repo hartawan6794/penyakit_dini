@@ -24,8 +24,8 @@
             <img src="<?= session()->get('img_user') ? base_url('/img/user/'.session()->get('img_user')) : base_url('/asset/img/user.png') ?>" class="img-circle shadow" alt="User Image">
 
             <p>
-              <?= session()->get('nama_lengkap') ?>
-              <small><?= session()->get('jabatan')?></small>
+              <?= session()->get('nama') ?>
+              <small><?= $this->roleModel->select('name')->where('id', session()->get('id_role'))->first()->name ?></small>
             </p>
           </li>
           <!-- Menu Body
