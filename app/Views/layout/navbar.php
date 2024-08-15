@@ -1,3 +1,10 @@
+<?php helper('settings');
+
+use App\Models\RolesModel;
+
+// Ambil role ID dari sesi
+$roleModel = new RolesModel();
+?>
 <!--  <nav class="main-header navbar navbar-expand navbar-dark"> !-->
 <nav class="main-header navbar navbar-expand navbar-dark">
   <div class="container-fluid">
@@ -25,7 +32,7 @@
 
             <p>
               <?= session()->get('nama') ?>
-              <small><?= $this->roleModel->select('name')->where('id', session()->get('id_role'))->first()->name ?></small>
+              <small><?= $roleModel->find(session()->get('id_role'))->name ?></small>
             </p>
           </li>
           <!-- Menu Body
