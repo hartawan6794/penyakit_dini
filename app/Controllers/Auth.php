@@ -45,10 +45,13 @@ class Auth extends Controller
 
                         $this->setSession($user);
 
+                        // var
                         // Jika "Remember Me" dicentang, buat cookie
-                        if ($this->request->getPost('remember_me')) {
+                        if ($this->request->getPost('remember_me') === 'true') {
                             $this->createRememberMeToken($user->id_user);
                         }
+
+                        // var_dump($this->request->getPost('remember_me'));die;
 
                         $response['status'] = 'success';
                     }
@@ -74,7 +77,6 @@ class Auth extends Controller
 
         $this->response->setCookie($cookie);
 
-        // var_dump($token);die;
         $userModel = new UserModel();
         $userModel->update($userId, ['remember_token' => $token]);
     }
@@ -94,7 +96,10 @@ class Auth extends Controller
 
     public function logout()
     {
+        helper('cookie');
         $session = session();
+        if (isset($_COOKIE['remember_me']))
+            delete_cookie('remember_me');
         $data['message'] = 'Anda berhasil logout';
         $session->destroy();
         // Redirect ke halaman awal

@@ -1,3 +1,10 @@
+<?php helper('settings');
+
+use App\Models\RolesModel;
+
+// Ambil role ID dari sesi
+$roleModel = new RolesModel();
+?>
 <!--  <nav class="main-header navbar navbar-expand navbar-dark"> !-->
 <nav class="main-header navbar navbar-expand navbar-dark">
   <div class="container-fluid">
@@ -24,8 +31,8 @@
             <img src="<?= session()->get('img_user') ? base_url('/img/user/'.session()->get('img_user')) : base_url('/asset/img/user.png') ?>" class="img-circle shadow" alt="User Image">
 
             <p>
-              <?= session()->get('nama_lengkap') ?>
-              <small><?= session()->get('jabatan')?></small>
+              <?= session()->get('nama') ?>
+              <small><?= $roleModel->find(session()->get('id_role'))->name ?></small>
             </p>
           </li>
           <!-- Menu Body
