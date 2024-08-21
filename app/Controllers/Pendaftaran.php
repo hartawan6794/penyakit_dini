@@ -139,6 +139,7 @@ class Pendaftaran extends BaseController
 			$data = $this->pendaftaranModel->where('id', $id)->first();
 
 			$checkInputRm = $riwayat->join('pendaftaran_pasien pp', 'pp.id = tbl_riwayat_pasien.pendaftaran_id')->first();
+
 			if ($checkInputRm)
 				$data->rm = $checkInputRm->no_rekam_medis;
 			return $this->response->setJSON($data);
@@ -164,7 +165,7 @@ class Pendaftaran extends BaseController
 			'nama_orang_tua' => 'required|string|max_length[255]',
 			'no_telepon' => 'required|string|max_length[15]',
 			'tanggal_keluhan' => 'required|valid_date',
-			'tanggal_lahir' => 'required|valid_date',
+			// 'tanggal_lahir' => 'required|valid_date',
 			'umur' => 'required|integer',
 			'no_rekam_medis' => 'required|integer'
 		];
@@ -200,7 +201,7 @@ class Pendaftaran extends BaseController
 			} else {
 				$fieldsPasien = [
 					'nama' => $fields['nama'],
-					'tanggal_lahir' => $fields['tanggal_lahir'],
+					// 'tanggal_lahir' => $fields['tanggal_lahir'],
 					'jenis_kelamin' => $fields['jenis_kelamin'],
 					'alamat' => $fields['alamat'],
 					'nama_orang_tua' => $fields['nama_orang_tua'],
@@ -208,6 +209,7 @@ class Pendaftaran extends BaseController
 					'no_telepon' => $fields['no_telepon'],
 					'created_at' => date('Y-m-d H:i:s')
 				];
+
 				// Save Pasien
 				$this->pasienModel->insert($fieldsPasien);
 
@@ -255,7 +257,7 @@ class Pendaftaran extends BaseController
 
 		$fields['id'] = $this->request->getPost('id');
 		// $fields['pasien_id'] = $this->request->getPost('pasien_id');
-		$fields['no_rekam_medis'] = $this->request->getPost('no_rekam_medis');
+		// $fields['no_rekam_medis'] = $this->request->getPost('no_rekam_medis');
 		$fields['tanggal_daftar'] = $this->request->getPost('tanggal_daftar');
 		$fields['deskripsi'] = $this->request->getPost('deskripsi');
 

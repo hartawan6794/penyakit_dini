@@ -41,7 +41,7 @@
             <input type="hidden" id="id" name="id" class="form-control" placeholder="id" required>
           </div>
           <div class="row">
-            <div class="col-md-6">
+            <div class="col-md-12">
               <div class="form-group mb-3">
                 <label for="nama" class="col-form-label"> Nama: <span class="text-danger">*</span> </label>
                 <div class="input-group mb-3">
@@ -50,16 +50,17 @@
                 </div>
               </div>
             </div>
+            <!-- <div class="col-md-6">
+             
+            </div> -->
             <div class="col-md-6">
+              <!-- <div class="form-group mb-3">
+                <label for="tanggal_lahir" class="col-form-label"> Tanggal lahir: <span class="text-danger">*</span> </label>
+                <input type="date" id="tanggal_lahir" name="tanggal_lahir" class="form-control" dateISO="true" required>
+              </div> -->
               <div class="form-group mb-3">
                 <label for="umur" class="col-form-label"> Usia: <span class="text-danger">*</span> </label>
                 <input type="text" id="umur" name="umur" class="form-control" placeholder="Usia" required>
-              </div>
-            </div>
-            <div class="col-md-6">
-              <div class="form-group mb-3">
-                <label for="tanggal_lahir" class="col-form-label"> Tanggal lahir: <span class="text-danger">*</span> </label>
-                <input type="date" id="tanggal_lahir" name="tanggal_lahir" class="form-control" dateISO="true" required>
               </div>
             </div>
             <div class="col-md-6">
@@ -181,7 +182,7 @@
 <script>
   $(function() {
     document.getElementById('tanggal_keluhan').setAttribute('max', new Date().toISOString().split('T')[0]);
-    document.getElementById('tanggal_lahir').setAttribute('max', new Date().toISOString().split('T')[0]);
+    // document.getElementById('tanggal_lahir').setAttribute('max', new Date().toISOString().split('T')[0]);
 
 
     const tanggalInput = document.getElementById('tanggal_keluhan');
@@ -301,7 +302,7 @@
     $('#pasien-modal').modal('hide')
     $('#id_pasien').val($(this).data('id'))
     $('#nama').val($(this).data('nama'))
-    $('#tanggal_lahir').val($(this).data('tgl-lahir'))
+    // $('#tanggal_lahir').val($(this).data('tgl-lahir'))
     $('#jenis_kelamin').val($(this).data('jns-kelamin'))
     $('#alamat').val($(this).data('alamat'))
     $('#nama_orang_tua').val($(this).data('nama-orang-tua'))
