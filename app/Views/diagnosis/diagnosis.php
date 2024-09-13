@@ -1,3 +1,9 @@
+<?php
+
+use App\Models\RolesModel;
+$roles = new RolesModel();
+$role = $roles->select('name')->where('id',session()->get('id_role'))->first();
+?>
 <?= $this->extend("layout/master") ?>
 
 <?= $this->section("content") ?>
@@ -9,9 +15,11 @@
       <div class="col-9 mt-2">
         <h3 class="card-title">Diagnosis Pasien</h3>
       </div>
+      <?php if($role->name === 'Dokter') {?>
       <div class="col-3">
         <a href="diagnosis/create" class="btn float-end btn-success" title="<?= lang("Tambah") ?>"> <i class="fa fa-plus"></i> <?= lang('Tambah') ?></a>
       </div>
+      <?php }?>
     </div>
   </div>
   <!-- /.card-header -->

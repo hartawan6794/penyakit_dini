@@ -3,28 +3,7 @@
 <html>
 
 <head>
-<?php helper('settings');
 
-use App\Models\MenuModel;
-use App\Models\MenurolesModel;
-
-// Ambil segmen URL saat ini
-$seg = segment()->getUri()->getSegment(1);
-
-// Ambil role ID dari sesi
-$roleModel = new MenurolesModel();
-$menuId = $roleModel->select('id_menu')
-  ->where('id_role', session()->get('id_role'))
-  ->asArray()
-  ->findColumn('id_menu');
-
-// Ambil menu berdasarkan role ID
-$menuModel = new MenuModel();
-$menus = $menuModel->select('content')
-  ->whereIn('id', $menuId)
-  ->findAll();
-// var_dump($menu);die;
-?>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <link rel="icon" href="<?= base_url('asset/img/logo_puskes.png') ?>">
