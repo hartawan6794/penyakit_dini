@@ -201,7 +201,7 @@ $role = $roles->select('name')->where('id',session()->get('id_role'))->first();
         $("#data-modal #pengobatan").text(response.pengobatan);
         $("#data-modal #updated_at").text(response.updated_at);
         var dosis = '<table class="table no-margin table-bordered table-striped"><tr><th>Nama Obat</th><th>Dosis</th><th>Deskripsi</th></tr>'
-        $.getJSON('<?= site_url($controller . '/obat/') ?>' + response.diagnosis_id, function(data) {
+        $.getJSON('<?= site_url($controller . '/obat/') ?>' + id , function(data) {
           $.each(data, function(key, val) {
             dosis += '<tr><td>' + val.nama_obat + '</td><td>' + val.dosis + '</td><td>' + val.deskripsi + '</td></tr>'
           })

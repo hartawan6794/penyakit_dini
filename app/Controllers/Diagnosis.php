@@ -139,6 +139,8 @@ class Diagnosis extends BaseController
 
 		$id = $this->request->getPost('id');
 
+		// var_dump($id);die;
+
 		if ($this->validation->check($id, 'required|numeric')) {
 			$data = $this->diagnosisModel->detail_diagnosis($id);
 			// var_dump($data);die;
@@ -397,7 +399,6 @@ class Diagnosis extends BaseController
 		$response = array();
 
 		$detail = $this->diagnosisObat->select('to.*')->join('tbl_obat to', 'to.id = diagnosis_obat.obat_id')->where('diagnosis_obat.diagnosis_id', $id)->findAll();
-		// var_dump($detail);die;
 		return $this->response->setJSON($detail);
 	}
 }

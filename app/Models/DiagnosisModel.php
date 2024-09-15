@@ -19,9 +19,16 @@ class DiagnosisModel extends Model {
 	protected $validationMessages = [];
 	protected $skipValidation     = true;    
 	
-	public function detail_diagnosis($kondisi)
+	public function detail_diagnosis($id_diagnosis)
 	{
-		$sql = "SELECT * FROM vw_diagnosis WHERE diagnosis_id = '$kondisi'";
+
+		$no_pendaftaran = $this->db->table('tbl_diagnosis td')
+		->select('no_pendaftaran')
+		->join('pendaftaran_pasien pp', 'td.pendaftaran_id = pp.id', 'left')->where(
+			"td.id", $id_diagnosis
+		)->get()->getFirstRow()->no_pendaftaran;
+
+		$sql = "SELECT * FROM vw_diagnosis WHERE no_pendaftaran = '$no_pendaftaran'";
 		$query = $this->db->query($sql);
 		return $query->getRow();;
 	}
