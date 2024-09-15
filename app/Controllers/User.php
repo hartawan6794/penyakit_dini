@@ -193,10 +193,12 @@ class User extends BaseController
 
 		return $this->response->setJSON($response);
 	}
-	public function edit($id_user)
+	public function edit()
 	{
 		$response = array();
+		// var_dump($this->request->getPost());die;
 
+		$fields['id_user'] = $this->request->getPost('id_user');
 		$fields['username'] = $this->request->getPost('username');
 		$fields['nama'] = $this->request->getPost('nama');
 		$fields['email'] = $this->request->getPost('email');
@@ -205,9 +207,14 @@ class User extends BaseController
 		$fields['id_role'] = $this->request->getPost('id_role');
 		$fields['updated_at'] = date('Y-m-d H:i:s');
 
-		$user = $this->userModel->find($id_user);
+		$user = $this->userModel->find($fields['id_user']);
 
 		$rules = [
+			
+			'id_user' => [
+				'label' => 'id user',
+				'rules' => 'required',
+			],
 			'username' => [
 				'label' => 'Username',
 				'rules' => 'required|min_length[3]|max_length[255]|is_unique[tbl_user.username,id_user,{id_user}]',
@@ -246,7 +253,7 @@ class User extends BaseController
 			$response['success'] = false;
 			$response['messages'] = $this->validation->getErrors(); // Show Error in Input Form
 		} else {
-			if ($this->userModel->update($id_user, $fields)) {
+			if ($this->userModel->update($fields['id_user'], $fields)) {
 				$response['success'] = true;
 				$response['messages'] = "Berhasil memperbarui data";
 			} else {
