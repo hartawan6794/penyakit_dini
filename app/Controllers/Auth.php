@@ -2,6 +2,7 @@
 
 namespace App\Controllers;
 
+use App\Models\MenurolesModel;
 use App\Models\UserModel;
 use CodeIgniter\Controller;
 
@@ -36,7 +37,16 @@ class Auth extends Controller
                 $user = $model->where('username', $username)->first();
 
                 if ($user && password_verify($password, $user->password)) {
+                    $menuRole = new MenurolesModel();
+                    //memiliki dua kondisi pertama bisa memberikan peringatan user belum memiliki hak akses / belum di tambah menu
+                    //kedua user di berikan menu dashboard secara default ketika create pengguna aplikasi
+                    if (!$menuRole->checkRoleMenu('1', $user->id_role)) {
 
+                        $response['status'] = 'error';
+                        $response['messages'] = 'User anda belum memiliki hak akses, harap hubungi admin ';
+
+                        return $this->response->setJSON($response);
+                    }
                     if ($user->status == 9) {
 
                         $response['status'] = 'error';
