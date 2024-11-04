@@ -88,7 +88,9 @@
 <script>
     $(document).ready(function() {
 
-        $('#login-button').on('click', function() {
+
+        // Fungsi login
+        function login() {
             var username = $('#username').val();
             var password = $('#password').val();
             var remember_me = $('#remember_me').is(':checked');
@@ -121,6 +123,17 @@
                     console.log('AJAX Error: ' + status + error);
                 }
             });
+        }
+
+        $('#login-button').on('click', function() {
+            login();
+        });
+
+        // Event tekan Enter di input username atau password
+        $('#username, #password').on('keypress', function(e) {
+            if (e.which === 13) { // Keycode 13 adalah Enter
+                login();
+            }
         });
     });
 </script>
